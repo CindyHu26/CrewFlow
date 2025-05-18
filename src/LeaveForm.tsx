@@ -38,8 +38,10 @@ export default function LeaveForm({ employeeId }: Props) {
       return;
     }
 
-    const { error } = await supabase.from('leave_requests').insert([
-      {
+    // Step 1: 新增請假主單
+    const { data: inserted, error } = await supabase
+      .from('leave_requests')
+      .insert([{
         employee_id: employeeId,
         type,
         start_time: startTime,
@@ -47,20 +49,54 @@ export default function LeaveForm({ employeeId }: Props) {
         duration_hours: durationHour,
         reason,
         status: 'pending',
-      },
-    ]);
+      }])
+      .select()
+      .single();
 
     if (error) {
       console.error('Supabase insert error:', error.message);
       setMessage('❌ 送出失敗，請稍後再試');
-    } else {
-      setMessage('✅ 已成功送出請假單');
-      setType('');
-      setStartTime('');
-      setEndTime('');
-      setDurationHour(0);
-      setReason('');
+      return;
     }
+
+    // Step 2: 查 HR 設定的審核人
+    const { data: approvers, error: approverError } = await supabase
+      .from('leave_approver_map')
+      .select('approver_id')
+      .eq('employee_id', employeeId);
+
+    if (approverError) {
+      console.error('查詢審核人錯誤:', approverError.message);
+      setMessage('❌ 查詢審核人失敗');
+      return;
+    }
+
+    // Step 3: 插入 leave_approvers 表
+    const inserts = approvers.map(row => ({
+      request_id: inserted.id,
+      approver_id: row.approver_id,
+      status: 'pending',
+      comment: null,
+      reviewed_at: null,
+    }));
+
+    const { error: insertApproversError } = await supabase
+      .from('leave_approvers')
+      .insert(inserts);
+
+    if (insertApproversError) {
+      console.error('寫入審核表失敗:', insertApproversError.message);
+      setMessage('❌ 寫入審核資料失敗');
+      return;
+    }
+
+    // 成功後清空表單
+    setMessage('✅ 已成功送出請假單');
+    setType('');
+    setStartTime('');
+    setEndTime('');
+    setDurationHour(0);
+    setReason('');
   };
 
   return (

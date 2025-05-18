@@ -8,6 +8,9 @@ type LeaveRequest = {
   start_time: string;
   end_time: string;
   reason: string;
+  users?: {
+    username: string;
+  };
 };
 
 type Approval = {
@@ -32,79 +35,80 @@ export default function MyApprovalList({ userId }: Props) {
     fetchData();
   }, []);
 
-    async function fetchData() {
+  async function fetchData() {
     const { data, error } = await supabase
-        .from('leave_approvers')
-        .select('*, leave_requests(*)')
-        .eq('approver_id', userId)
-        .eq('status', 'pending');
+      .from('leave_approvers')
+      .select(`
+        *,
+        leave_requests:leave_approvers_request_id_fkey (
+          id,
+          employee_id,
+          type,
+          start_time,
+          end_time,
+          reason,
+          users!employee_id (
+            username
+          )
+        )
+      `)
+      .eq('approver_id', userId)
+      .eq('status', 'pending');
 
     if (error) {
-        console.error('讀取審核資料失敗:', error.message);
-        alert(`❌ 錯誤：無法載入待審資料\n${error.message}`);
-        return;
+      console.error('載入錯誤:', error.message);
+      alert(`❌ 錯誤：無法載入待審資料\n${error.message}`);
+    } else {
+      setApprovals(data);
     }
-
-    if (data) setApprovals(data);
     setLoading(false);
-    }
+  }
 
-    async function handleApprove(a: Approval, decision: 'approved' | 'rejected') {
-    // 1️⃣ 更新 leave_approvers
+  async function handleApprove(a: Approval, decision: 'approved' | 'rejected') {
+    // 1. 更新此筆 leave_approvers
     const { error: updateError } = await supabase
-        .from('leave_approvers')
-        .update({
+      .from('leave_approvers')
+      .update({
         status: decision,
         reviewed_at: new Date().toISOString(),
-        })
-        .eq('id', a.id);
+      })
+      .eq('id', a.id);
 
     if (updateError) {
-        console.error('更新審核狀態失敗:', updateError.message);
-        alert(`❌ 錯誤：更新失敗\n${updateError.message}`);
-        return;
+      alert(`❌ 更新失敗：${updateError.message}`);
+      console.error(updateError);
+      return;
     }
 
-    // 2️⃣ 查詢是否還有 pending
+    // 2. 查此請假單是否還有其他未審核
     const { data: remaining, error: remainingError } = await supabase
-        .from('leave_approvers')
-        .select('*')
-        .eq('request_id', a.request_id)
-        .eq('status', 'pending');
+      .from('leave_approvers')
+      .select('*')
+      .eq('request_id', a.request_id)
+      .eq('status', 'pending');
 
     if (remainingError) {
-        console.error('查詢剩餘審核失敗:', remainingError.message);
-        alert(`⚠️ 查詢失敗\n${remainingError.message}`);
-        return;
+      alert(`❌ 查詢失敗：${remainingError.message}`);
+      console.error(remainingError);
+      return;
     }
 
-    // 3️⃣ 若審核完畢或被駁回，更新主表
-    if (remaining?.length === 0 && decision === 'approved') {
-        const { error: updateMainError } = await supabase
-        .from('leave_requests')
-        .update({ status: 'approved' })
-        .eq('id', a.request_id);
-
-        if (updateMainError) {
-        console.error('更新請假單狀態失敗:', updateMainError.message);
-        alert(`⚠️ 無法更新主表狀態：\n${updateMainError.message}`);
-        }
-    }
-
+    // 3. 更新主表 leave_requests.status
     if (decision === 'rejected') {
-        const { error: rejectMainError } = await supabase
+      await supabase
         .from('leave_requests')
         .update({ status: 'rejected' })
         .eq('id', a.request_id);
-
-        if (rejectMainError) {
-        console.error('駁回主表更新失敗:', rejectMainError.message);
-        alert(`⚠️ 無法駁回主表狀態：\n${rejectMainError.message}`);
-        }
+    } else if (remaining?.length === 0 && decision === 'approved') {
+      await supabase
+        .from('leave_requests')
+        .update({ status: 'approved' })
+        .eq('id', a.request_id);
     }
 
-    await fetchData(); // 重新載入列表
-    }
+    // 4. 重新載入畫面
+    fetchData();
+  }
 
   if (loading) return <p>載入中...</p>;
   if (approvals.length === 0) return <p>🎉 沒有待審核的請假單</p>;
@@ -125,7 +129,7 @@ export default function MyApprovalList({ userId }: Props) {
         <tbody>
           {approvals.map((a) => (
             <tr key={a.id}>
-              <td>{a.leave_requests.employee_id}</td>
+              <td>{a.leave_requests.users?.username || a.leave_requests.employee_id}</td>
               <td>{a.leave_requests.type}</td>
               <td>
                 {new Date(a.leave_requests.start_time).toLocaleString()}<br />
