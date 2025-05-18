@@ -7,6 +7,7 @@ import HRLeaveAccess from './HRLeaveAccess';
 import MyApprovalList from './MyApprovalList';
 import CustomerManager from './CustomerManager';
 import ServiceForm from './ServiceForm';
+import MyServiceRecords from './MyServiceRecords';
 
 function App() {
   const [user, setUser] = useState<any>(null);
@@ -15,7 +16,7 @@ function App() {
   const [activeMain, setActiveMain] = useState<string | null>(null); // 主選單目前點了誰
   const [activeSub, setActiveSub] = useState<
     'form' | 'history' | 'hr' | 'approvals' |
-    'customer' | 'serviceForm' | null
+    'customer' | 'serviceForm' | 'myService' | null
   >(null);
 
   if (!user) {
@@ -92,6 +93,9 @@ function App() {
           <button onClick={() => setActiveSub('customer')}>
             🗂 客戶管理
           </button>
+          <button onClick={() => setActiveSub('myService')}>
+            📄 我的服務紀錄
+          </button>
         </div>
       )}
 
@@ -114,6 +118,9 @@ function App() {
       )}
       {activeMain === 'service' && activeSub === 'customer' && (
         <CustomerManager />
+      )}
+      {activeMain === 'service' && activeSub === 'myService' && (
+        <MyServiceRecords userId={user.id} />
       )}
 
     </div>

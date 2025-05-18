@@ -60,9 +60,11 @@ export default function ServiceForm({ userId }: Props) {
       return;
     }
 
-    const signatureBase64 = sigRef.current?.getTrimmedCanvas().toDataURL('image/png');
+  const signatureBase64 = sigRef.current
+    ? sigRef.current.getCanvas().toDataURL('image/png')
+    : null;
 
-    const { error } = await supabase.from('service_records').insert([{
+  const { error } = await supabase.from('service_records').insert([{
       service_time: serviceTime,
       customer_id: selectedCustomerId,
       worker_ids: selectedWorkers,
