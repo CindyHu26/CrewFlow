@@ -21,7 +21,7 @@ export default function LeaveHistory({ employeeId }: Props) {
 
   useEffect(() => {
     const fetchLeave = async () => {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('leave_requests')
         .select('*')
         .eq('employee_id', employeeId)
