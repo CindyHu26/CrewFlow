@@ -3,15 +3,18 @@ import Login from './Login';
 import Register from './Register';
 import LeaveForm from './LeaveForm';
 import LeaveHistory from './LeaveHistory';
+import HRLeaveAccess from './HRLeaveAccess';
+import MyApprovalList from './MyApprovalList';
 
 function App() {
   const [user, setUser] = useState<any>(null);
   const [showRegister, setShowRegister] = useState(false);
 
   const [activeMain, setActiveMain] = useState<string | null>(null); // 主選單目前點了誰
-  const [activeSub, setActiveSub] = useState<'form' | 'history' | null>(null);
+  const [activeSub, setActiveSub] = useState<'form' | 'history' | 'hr' | 'approvals' | null>(null);
 
   if (!user) {
+    console.log("還沒登入");
     return showRegister ? (
       <>
         <Register onRegisterSuccess={() => setShowRegister(false)} />
@@ -51,19 +54,32 @@ function App() {
           <button onClick={() => setActiveSub('form')} style={{ marginRight: '1rem' }}>
             ✍️ 填寫請假單
           </button>
-          <button onClick={() => setActiveSub('history')}>
+          <button onClick={() => setActiveSub('history')} style={{ marginRight: '1rem' }}>
             📋 我的請假記錄
+          </button>
+          <button onClick={() => setActiveSub('hr')}>
+            🔐 審核設定（HR）
+          </button>
+          <button onClick={() => setActiveSub('approvals')}>
+            📩 我的待審請假單
           </button>
         </div>
       )}
 
-      {/* ▶ 子功能畫面 */}
       {activeMain === 'attendance' && activeSub === 'form' && (
         <LeaveForm employeeId={user.id} />
       )}
       {activeMain === 'attendance' && activeSub === 'history' && (
         <LeaveHistory employeeId={user.id} />
       )}
+      {activeMain === 'attendance' && activeSub === 'hr' && (
+        <HRLeaveAccess />
+      )}
+      {activeMain === 'attendance' && activeSub === 'approvals' && (
+        <MyApprovalList userId={user.id} />
+      )}
+
+
     </div>
   );
 }

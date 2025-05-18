@@ -1,54 +1,35 @@
-# React + TypeScript + Vite
+# 🚀 CrewFlow
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**CrewFlow** is a modern personnel service and leave management system, designed for teams that require flexibility, accountability, and efficient approval workflows. Built with React + Supabase, it supports multi-level leave approvals, service record tracking, and HR-controlled approver mappings.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## Expanding the ESLint configuration
+- 📝 Flexible leave request form with hour-level precision
+- 🔁 Multi-approver review logic (status updates only when all approved)
+- 👥 HR panel for mapping employees to approvers
+- 📋 Personal leave history tracking
+- 🗃️ Service record form and client signature support (planned)
+- 📬 Approvers dashboard to handle their pending reviews
+- ✅ Auto-update leave status to "approved" only after all reviewers approve
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## 🛠️ Tech Stack
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+| Tech       | Description                   |
+|------------|-------------------------------|
+| React + Vite + TypeScript | Frontend stack               |
+| Supabase   | Auth, Database, RLS            |
+| Firebase Hosting / Vercel | Optional deployment targets |
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+## 🧪 Local Development
+
+```bash
+git clone https://github.com/yourname/crewflow
+cd crewflow
+npm install
+npm run dev
