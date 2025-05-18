@@ -65,7 +65,15 @@ export default function MyApprovalList({ userId }: Props) {
   }
 
   async function handleApprove(a: Approval, decision: 'approved' | 'rejected') {
-    // 1. 更新此筆 leave_approvers
+    console.log('🔍 通過點擊', a.id, decision);
+    console.log('🔎 a =', a);
+
+    if (!a.id) {
+      alert('❌ 找不到審核紀錄 ID，無法處理。');
+      return;
+    }
+
+    // 1️⃣ 更新此筆 leave_approvers 審核狀態
     const { error: updateError } = await supabase
       .from('leave_approvers')
       .update({
@@ -75,12 +83,14 @@ export default function MyApprovalList({ userId }: Props) {
       .eq('id', a.id);
 
     if (updateError) {
+      console.error('❌ 更新 leave_approvers 失敗:', updateError.message);
       alert(`❌ 更新失敗：${updateError.message}`);
-      console.error(updateError);
       return;
+    } else {
+      console.log('✅ 已更新 leave_approvers status:', decision);
     }
 
-    // 2. 查此請假單是否還有其他未審核
+    // 2️⃣ 查詢該 request_id 是否還有其他人尚未審核
     const { data: remaining, error: remainingError } = await supabase
       .from('leave_approvers')
       .select('*')
@@ -88,27 +98,45 @@ export default function MyApprovalList({ userId }: Props) {
       .eq('status', 'pending');
 
     if (remainingError) {
+      console.error('❌ 查詢剩餘審核錯誤:', remainingError.message);
       alert(`❌ 查詢失敗：${remainingError.message}`);
-      console.error(remainingError);
       return;
     }
 
-    // 3. 更新主表 leave_requests.status
+    console.log(`📊 還有 ${remaining.length} 位尚未審核`);
+
+    // 3️⃣ 更新 leave_requests 主表狀態（全部通過 或 有人駁回）
     if (decision === 'rejected') {
-      await supabase
+      const { error: rejectError } = await supabase
         .from('leave_requests')
         .update({ status: 'rejected' })
         .eq('id', a.request_id);
-    } else if (remaining?.length === 0 && decision === 'approved') {
-      await supabase
+
+      if (rejectError) {
+        console.error('❌ 駁回主表更新失敗:', rejectError.message);
+        alert(`⚠️ 無法更新主表為 rejected：${rejectError.message}`);
+      } else {
+        console.log('✅ 已駁回主表 leave_requests');
+      }
+
+    } else if (decision === 'approved' && remaining.length === 0) {
+      const { error: approveError } = await supabase
         .from('leave_requests')
         .update({ status: 'approved' })
         .eq('id', a.request_id);
+
+      if (approveError) {
+        console.error('❌ 主表 approved 更新失敗:', approveError.message);
+        alert(`⚠️ 無法更新主表為 approved：${approveError.message}`);
+      } else {
+        console.log('✅ 已核准主表 leave_requests');
+      }
     }
 
-    // 4. 重新載入畫面
+    // 4️⃣ 更新畫面
     fetchData();
   }
+
 
   if (loading) return <p>載入中...</p>;
   if (approvals.length === 0) return <p>🎉 沒有待審核的請假單</p>;
