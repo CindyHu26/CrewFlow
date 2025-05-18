@@ -27,6 +27,7 @@ export default function ServiceForm({ userId }: Props) {
   const [content, setContent] = useState('');
   const [message, setMessage] = useState('');
   const sigRef = useRef<SignatureCanvas | null>(null);
+  const [photoFiles, setPhotoFiles] = useState<FileList | null>(null);
 
   useEffect(() => {
     fetchData();
@@ -64,12 +65,39 @@ export default function ServiceForm({ userId }: Props) {
     ? sigRef.current.getCanvas().toDataURL('image/png')
     : null;
 
+  const uploadedUrls: string[] = [];
+
+  if (photoFiles) {
+    for (let i = 0; i < photoFiles.length; i++) {
+      const file = photoFiles[i];
+      const filename = `${Date.now()}_${file.name}`;
+      const { error: uploadError } = await supabase.storage
+        .from('service-photos')
+        .upload(filename, file);
+
+      if (uploadError) {
+        console.error('圖片上傳失敗:', uploadError.message);
+        setMessage('❌ 有圖片上傳失敗，請重試');
+        return;
+      }
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from('service-photos').getPublicUrl(filename);
+
+      if (publicUrl) {
+        uploadedUrls.push(publicUrl);
+      }
+    }
+  }
+
   const { error } = await supabase.from('service_records').insert([{
       service_time: serviceTime,
       customer_id: selectedCustomerId,
       worker_ids: selectedWorkers,
       content,
       signature_data: signatureBase64,
+      photos: uploadedUrls,
       created_by: userId,
     }]);
 
@@ -137,6 +165,19 @@ export default function ServiceForm({ userId }: Props) {
         ref={sigRef}
       />
       <button onClick={() => sigRef.current?.clear()}>清除簽名</button><br /><br />
+
+      <label>上傳照片：</label><br />
+      <input type="file" accept="image/*" multiple onChange={(e) => setPhotoFiles(e.target.files)} /><br /><br />
+
+      {photoFiles && (
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
+          {Array.from(photoFiles).map((file, index) => (
+            <div key={index} style={{ fontSize: '0.8rem' }}>
+              📷 {file.name}
+            </div>
+          ))}
+        </div>
+      )}
 
       <button onClick={handleSubmit}>📤 送出紀錄</button>
       {message && (

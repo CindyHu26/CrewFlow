@@ -15,6 +15,7 @@ type Record = {
   content: string;
   signature_data: string | null;
   created_by: string;
+  photos: string[];
   customers?: Customer;
 };
 
@@ -118,6 +119,22 @@ export default function MyServiceRecords({ userId }: Props) {
                     />
                   </>
                 )}
+                {record.photos && record.photos.length > 0 && (
+                  <>
+                    <p><strong>照片：</strong></p>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+                      {record.photos.map((url, idx) => (
+                        <img
+                          key={idx}
+                          src={url}
+                          alt={`服務照片 ${idx + 1}`}
+                          style={{ width: '200px', border: '1px solid #ccc' }}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
+
               </>
             );
           })()}
