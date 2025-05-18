@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
 import { supabase } from './supabase';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import { useRef } from 'react';
+
 
 type Customer = {
   id: string;
@@ -61,6 +65,41 @@ export default function MyServiceRecords({ userId }: Props) {
     return users.find(u => u.id === id)?.username || id;
   };
 
+  const detailRef = useRef<HTMLDivElement>(null);
+
+  const handleDownloadPdf = async () => {
+    if (!detailRef.current) return;
+
+    // 確保圖片全部載入
+    const images = detailRef.current.querySelectorAll('img') || [];
+    await Promise.all(
+      Array.from(images).map(img => {
+        if (!img.complete) {
+          return new Promise(resolve => {
+            img.onload = () => resolve(true);
+            img.onerror = () => resolve(false);
+          });
+        }
+        return Promise.resolve(true);
+      })
+    );
+
+    const canvas = await html2canvas(detailRef.current, {
+      useCORS: true,
+      allowTaint: false,
+    });
+
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const imgProps = pdf.getImageProperties(imgData);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    pdf.save(`service_record_${expandedId}.pdf`);
+  };
+
+
   return (
     <div style={{ padding: '2rem' }}>
       <h2>📋 我的服務紀錄</h2>
@@ -96,7 +135,7 @@ export default function MyServiceRecords({ userId }: Props) {
       )}
 
       {expandedId && (
-        <div style={{ marginTop: '2rem', border: '1px solid #ccc', padding: '1rem' }}>
+        <div ref={detailRef} style={{ marginTop: '2rem', border: '1px solid #ccc', padding: '1rem' }}>
           <h3>🧾 詳細內容</h3>
           {(() => {
             const record = records.find(r => r.id === expandedId);
@@ -135,9 +174,14 @@ export default function MyServiceRecords({ userId }: Props) {
                   </>
                 )}
 
+            <button onClick={handleDownloadPdf} style={{ marginTop: '1rem' }}>
+              📄 下載 PDF
+            </button>
               </>
             );
+
           })()}
+
         </div>
       )}
     </div>
