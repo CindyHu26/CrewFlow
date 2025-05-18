@@ -5,13 +5,18 @@ import LeaveForm from './LeaveForm';
 import LeaveHistory from './LeaveHistory';
 import HRLeaveAccess from './HRLeaveAccess';
 import MyApprovalList from './MyApprovalList';
+import CustomerManager from './CustomerManager';
+import ServiceForm from './ServiceForm';
 
 function App() {
   const [user, setUser] = useState<any>(null);
   const [showRegister, setShowRegister] = useState(false);
 
   const [activeMain, setActiveMain] = useState<string | null>(null); // 主選單目前點了誰
-  const [activeSub, setActiveSub] = useState<'form' | 'history' | 'hr' | 'approvals' | null>(null);
+  const [activeSub, setActiveSub] = useState<
+    'form' | 'history' | 'hr' | 'approvals' |
+    'customer' | 'serviceForm' | null
+  >(null);
 
   if (!user) {
     console.log("還沒登入");
@@ -45,10 +50,22 @@ function App() {
           }
         }}>
           {activeMain === 'attendance' ? '▼' : '▶'} 📆 考勤管理
+
+        </button>
+                <button onClick={() => {
+          if (activeMain === 'service') {
+            setActiveMain(null);
+            setActiveSub(null);
+          } else {
+            setActiveMain('service');
+            setActiveSub('serviceForm');
+          }
+        }}>
+          {activeMain === 'service' ? '▼' : '▶'} 📋 服務紀錄管理
         </button>
       </div>
 
-      {/* ▶ 子功能列表 */}
+      {/* ▶ 考勤管理 子功能列表 */}
       {activeMain === 'attendance' && (
         <div style={{ paddingLeft: '2rem', marginBottom: '1rem' }}>
           <button onClick={() => setActiveSub('form')} style={{ marginRight: '1rem' }}>
@@ -66,6 +83,19 @@ function App() {
         </div>
       )}
 
+      {/* ▶ 服務紀錄 子功能列表 */}
+      {activeMain === 'service' && (
+        <div style={{ paddingLeft: '2rem', marginBottom: '1rem' }}>
+          <button onClick={() => setActiveSub('serviceForm')} style={{ marginRight: '1rem' }}>
+            📝 新增服務紀錄
+          </button>
+          <button onClick={() => setActiveSub('customer')}>
+            🗂 客戶管理
+          </button>
+        </div>
+      )}
+
+      {/* ▶ 子畫面顯示區 */}
       {activeMain === 'attendance' && activeSub === 'form' && (
         <LeaveForm employeeId={user.id} />
       )}
@@ -79,6 +109,12 @@ function App() {
         <MyApprovalList userId={user.id} />
       )}
 
+      {activeMain === 'service' && activeSub === 'serviceForm' && (
+        <ServiceForm userId={user.id} />
+      )}
+      {activeMain === 'service' && activeSub === 'customer' && (
+        <CustomerManager />
+      )}
 
     </div>
   );
