@@ -44,7 +44,7 @@ let db: Firestore;
 try {
   console.log('正在初始化 Firestore...');
   db = initializeFirestore(app, {
-    experimentalForceLongPolling: false, // 使用 WebSocket 連接
+  experimentalForceLongPolling: false, // 使用 WebSocket 連接
     experimentalAutoDetectLongPolling: true // 自動檢測最佳連接方式
   }) as Firestore;
   console.log('Firestore 初始化成功');

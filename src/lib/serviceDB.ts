@@ -159,7 +159,7 @@ export const serviceDB = {
       
       staffServicesSnapshot.docs.forEach(doc => {
         try {
-          const data = doc.data();
+        const data = doc.data();
           console.log('Staff service data:', data);
           
           if (!data.timestamp) {
@@ -167,9 +167,9 @@ export const serviceDB = {
             return;
           }
 
-          servicesMap.set(doc.id, {
-            ...data,
-            id: doc.id,
+        servicesMap.set(doc.id, {
+          ...data,
+          id: doc.id,
             timestamp: data.timestamp || Timestamp.now(),
             created_at: data.created_at || Timestamp.now(),
             updated_at: data.updated_at || Timestamp.now(),
@@ -182,7 +182,7 @@ export const serviceDB = {
             reports: data.reports || [],
             photo_urls: data.photo_urls || [],
             status: data.status || 'draft'
-          } as Service);
+        } as Service);
         } catch (error) {
           console.error('Error processing staff service:', error, doc.id);
         }
@@ -190,8 +190,8 @@ export const serviceDB = {
 
       partnerServicesSnapshot.docs.forEach(doc => {
         try {
-          if (!servicesMap.has(doc.id)) {
-            const data = doc.data();
+        if (!servicesMap.has(doc.id)) {
+          const data = doc.data();
             console.log('Partner service data:', data);
             
             if (!data.timestamp) {
@@ -199,9 +199,9 @@ export const serviceDB = {
               return;
             }
 
-            servicesMap.set(doc.id, {
-              ...data,
-              id: doc.id,
+          servicesMap.set(doc.id, {
+            ...data,
+            id: doc.id,
               timestamp: data.timestamp || Timestamp.now(),
               created_at: data.created_at || Timestamp.now(),
               updated_at: data.updated_at || Timestamp.now(),
@@ -214,7 +214,7 @@ export const serviceDB = {
               reports: data.reports || [],
               photo_urls: data.photo_urls || [],
               status: data.status || 'draft'
-            } as Service);
+          } as Service);
           }
         } catch (error) {
           console.error('Error processing partner service:', error, doc.id);

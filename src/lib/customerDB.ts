@@ -141,11 +141,11 @@ export const customerDB = {
       }
 
       const q = query(
-        collection(db, COLLECTION_NAME),
-        where('authorized_users', 'array-contains', currentUser.employee_id),
+          collection(db, COLLECTION_NAME),
+          where('authorized_users', 'array-contains', currentUser.employee_id),
         where('status', '==', 'active'),
         orderBy('name')
-      );
+        );
 
       console.log('執行查詢...');
       const querySnapshot = await getDocs(q);
@@ -170,7 +170,7 @@ export const customerDB = {
       return customers;
     } catch (error) {
       console.error('取得可訪問的客戶列表時發生錯誤:', error);
-      throw new Error('取得客戶列表失敗');
+        throw new Error('取得客戶列表失敗');
     }
   },
 

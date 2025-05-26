@@ -250,7 +250,7 @@ export default function LeaveReviewPage() {
         if (!allDeputiesApproved) {
           return false;
         }
-
+        
         // 檢查其他層級是否已審核或不需要審核
         // 只要有一個主管通過即可
         const supervisorComplete = leaveData.approvalFlow.supervisors.length === 0 || 
@@ -276,52 +276,52 @@ export default function LeaveReviewPage() {
       
       // 如果代理人還沒全部通過，只返回待審核的代理人
       if (!allDeputiesApproved) {
-        const pendingDeputies = leaveData.approvalFlow.deputies
-          .filter(d => d.status === 'pending')
-          .map(d => d.id);
-        pendingApprovers.push(...pendingDeputies);
+          const pendingDeputies = leaveData.approvalFlow.deputies
+            .filter(d => d.status === 'pending')
+            .map(d => d.id);
+            pendingApprovers.push(...pendingDeputies);
       } else {
         // 代理人全部通過後，才開始檢查主管層級
         for (let i = currentIndex + 1; i < approvalOrder.length; i++) {
           const role = approvalOrder[i];
           if (role === 'supervisor') {
-            // 如果主任層級尚未有人通過，則繼續尋找下一個主任
-            const hasApprovedSupervisor = leaveData.approvalFlow.supervisors.some(s => s.status === 'approved');
-            if (!hasApprovedSupervisor) {
-              const pendingSupervisors = leaveData.approvalFlow.supervisors
-                .filter(s => s.status === 'pending')
-                .map(s => s.id);
-              if (pendingSupervisors.length > 0) {
-                pendingApprovers.push(...pendingSupervisors);
-                break;
-              }
+          // 如果主任層級尚未有人通過，則繼續尋找下一個主任
+          const hasApprovedSupervisor = leaveData.approvalFlow.supervisors.some(s => s.status === 'approved');
+          if (!hasApprovedSupervisor) {
+            const pendingSupervisors = leaveData.approvalFlow.supervisors
+              .filter(s => s.status === 'pending')
+              .map(s => s.id);
+            if (pendingSupervisors.length > 0) {
+              pendingApprovers.push(...pendingSupervisors);
+              break;
             }
-            // 如果已有主任通過，則繼續檢查下一層級
-            continue;
-          } else if (role === 'manager') {
-            // 如果經理層級尚未有人通過，則繼續尋找下一個經理
-            const hasApprovedManager = leaveData.approvalFlow.managers.some(m => m.status === 'approved');
-            if (!hasApprovedManager) {
-              const pendingManagers = leaveData.approvalFlow.managers
-                .filter(m => m.status === 'pending')
-                .map(m => m.id);
-              if (pendingManagers.length > 0) {
-                pendingApprovers.push(...pendingManagers);
-                break;
-              }
+          }
+          // 如果已有主任通過，則繼續檢查下一層級
+          continue;
+        } else if (role === 'manager') {
+          // 如果經理層級尚未有人通過，則繼續尋找下一個經理
+          const hasApprovedManager = leaveData.approvalFlow.managers.some(m => m.status === 'approved');
+          if (!hasApprovedManager) {
+            const pendingManagers = leaveData.approvalFlow.managers
+              .filter(m => m.status === 'pending')
+              .map(m => m.id);
+            if (pendingManagers.length > 0) {
+              pendingApprovers.push(...pendingManagers);
+              break;
             }
-            // 如果已有經理通過，則繼續檢查下一層級
-            continue;
-          } else if (role === 'director') {
-            // 如果協理層級尚未有人通過，則繼續尋找下一個協理
-            const hasApprovedDirector = leaveData.approvalFlow.directors.some(d => d.status === 'approved');
-            if (!hasApprovedDirector) {
-              const pendingDirectors = leaveData.approvalFlow.directors
-                .filter(d => d.status === 'pending')
-                .map(d => d.id);
-              if (pendingDirectors.length > 0) {
-                pendingApprovers.push(...pendingDirectors);
-                break;
+          }
+          // 如果已有經理通過，則繼續檢查下一層級
+          continue;
+        } else if (role === 'director') {
+          // 如果協理層級尚未有人通過，則繼續尋找下一個協理
+          const hasApprovedDirector = leaveData.approvalFlow.directors.some(d => d.status === 'approved');
+          if (!hasApprovedDirector) {
+            const pendingDirectors = leaveData.approvalFlow.directors
+              .filter(d => d.status === 'pending')
+              .map(d => d.id);
+            if (pendingDirectors.length > 0) {
+              pendingApprovers.push(...pendingDirectors);
+              break;
               }
             }
           }
@@ -604,30 +604,30 @@ export default function LeaveReviewPage() {
                   {(() => {
                     const user = getCurrentUser();
                     return user && Array.isArray(leave.currentApprovers) && typeof user.id === 'string' && leave.currentApprovers.includes(user.id) && (
-                      <div className="mt-4 flex justify-end space-x-3">
-                        <button
-                          onClick={() => handleReject(leave.id)}
-                          disabled={processing === leave.id}
-                          className={`px-4 py-2 rounded-md text-white ${
-                            processing === leave.id
-                              ? 'bg-gray-400 cursor-not-allowed'
-                              : 'bg-red-600 hover:bg-red-700'
-                          }`}
-                        >
-                          {processing === leave.id ? '處理中...' : '拒絕'}
-                        </button>
-                        <button
-                          onClick={() => handleApprove(leave.id)}
-                          disabled={processing === leave.id}
-                          className={`px-4 py-2 rounded-md text-white ${
-                            processing === leave.id
-                              ? 'bg-gray-400 cursor-not-allowed'
-                              : 'bg-green-600 hover:bg-green-700'
-                          }`}
-                        >
-                          {processing === leave.id ? '處理中...' : '同意'}
-                        </button>
-                      </div>
+                  <div className="mt-4 flex justify-end space-x-3">
+                    <button
+                      onClick={() => handleReject(leave.id)}
+                      disabled={processing === leave.id}
+                      className={`px-4 py-2 rounded-md text-white ${
+                        processing === leave.id
+                          ? 'bg-gray-400 cursor-not-allowed'
+                          : 'bg-red-600 hover:bg-red-700'
+                      }`}
+                    >
+                      {processing === leave.id ? '處理中...' : '拒絕'}
+                    </button>
+                    <button
+                      onClick={() => handleApprove(leave.id)}
+                      disabled={processing === leave.id}
+                      className={`px-4 py-2 rounded-md text-white ${
+                        processing === leave.id
+                          ? 'bg-gray-400 cursor-not-allowed'
+                          : 'bg-green-600 hover:bg-green-700'
+                      }`}
+                    >
+                      {processing === leave.id ? '處理中...' : '同意'}
+                    </button>
+                  </div>
                     );
                   })()}
                 </div>
