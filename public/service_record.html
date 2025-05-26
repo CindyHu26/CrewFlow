@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>服務紀錄表</title>
+  <style>
+    body {
+      font-family: 'Microsoft JhengHei', sans-serif;
+      font-size: 9pt; /* ✅ 比預設小一點 */
+      padding: 10mm;  /* ✅ 邊界減小 */
+      max-width: 794px; /* A4 width */
+      margin: auto;
+      line-height: 1.2;
+    }
+    h1 {
+      text-align: center;
+      font-size: 16pt;
+      margin-bottom: 5px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 10px;
+    }
+    td {
+      border: 1px solid #000;
+      padding: 4px;
+      vertical-align: top;
+    }
+    .section-title {
+      font-weight: bold;
+      background-color: #f0f0f0;
+      padding: 6px;
+      margin-top: 10px;
+    }
+    .signature-box {
+      width: 150px;
+      height: 75px;
+      border: 1px solid #000;
+      margin-top: 10px;
+    }
+    h3 {
+      text-align: center;
+      font-size: 12pt;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>長青國際集團</h1>
+  <h3>服務紀錄表（泰）（越）（印）（菲）</h3>
+  <table>
+    <tr>
+      <td>客戶名稱</td><td>{{客戶名稱}}</td>
+      <td>服務日期</td><td>{{服務時間}}</td>
+    </tr>
+    <tr>
+      <td>工人姓名</td><td>{{工人姓名}}</td>
+      <td>護照號碼</td><td></td>
+    </tr>
+    <tr>
+      <td>工種</td><td>{{工種}}</td>
+      <td>國籍</td><td>{{國籍}}</td>
+    </tr>
+    <tr>
+      <td>來源</td><td colspan="3">親訪</td>
+    </tr>
+  </table>
+
+  <div class="section-title">一、服務內容及反映事項</div>
+  <p>รายการบริการและข้อเสนอ | Hạng mục phục vụ và sự việc phản ứng | JENIS SERVICE DAN HAL YANG DINYATAKAN | Service Contents and Response Matters</p>
+  <p><strong>雇主 นายจ้าง Chủ sử dụng Majikan Employer：</strong><br>{{一、 服務內容及反映事項-1.雇主}}</p>
+  <p><strong>工人 คนงาน Lao động TKI Worker：</strong><br>{{一、 服務內容及反映事項-2.移工}}</p>
+
+  <div class="section-title">二、處理經過及結果</div>
+  <p>ขั้นตอนการจัดการและผลสรุป | Thông qua xử lý và kết quả | PROSES DAN HASIL | Handle Process and Results</p>
+  <p><strong>經過 ขั้นตอน Thông qua Proses Process：</strong><br>{{二、 1.處理經過}}</p>
+  <p><strong>結果 ผลสรุป Kết quả Hasil Results：</strong><br>{{二、 2.處理結果}}</p>
+
+  <p>{{收取_交付_物件}}</p>
+  <p>{{收支明細}}</p>
+
+  <div class="section-title">三、雇主/外勞資訊提供</div>
+  <p style="font-size: 8pt;">นายจ้างลูกจ้างให้ข่าวสาร | Cung cấp tin tức cho chủ sử dụng / lao động | INFORMASI YANG DIBERIKAN UNTUK MAJIKAN/PEKERJA | Supply Information to Employer/Foreign Worker</p>
+
+  <p style="font-size: 6pt;"><strong>■ 緊急聯絡電話 เบอร์โทรยามฉุกเฉิน Số điện thoại liên lạc khẩn cấp của công ty  Pengaduan dan keadaan darurat Emergency Hotlines：</strong><br>04-7785333, 0913-087389, 0915-087588, 0985-680068, 0913-662729</p>
+
+  <p style="font-size: 6pt;"><strong>■ 公司雙語人員姓名及聯絡電話：ชื่อล่ามและเบอร์โทรติดต่อ  Họ tên phiên dịch của công ty và số điện thoại liên lạc Nama dan Telp penterjemah  Company Translator's Name and Cell Phone Number</strong><br>姓名 Họ tên Nama Name：{{同行人員}}<br>行動電話：</p>
+
+  <p style="font-size: 6pt;">□ 送國外雜誌บริการนิตยาสาร  Tặng tạp chí Mengantar  Koran/Majalah  deliver foreign magazine 本เล่ม quyển Buku booklet</p>
+  <p style="font-size: 6pt;">□ 勞動部外語廣播節目資訊 ฟังรายการวิทยุข่าวภาษาต่างชาติจากกระทรวงแรงงาน  Đài phát thanh tin tức tiếng Việt của bộ lao động Informasi siaran radio bahasa asing dari majelis tenaga kerja   CLA's Information of foreign language broadcasting program </p>
+  <p style="font-size: 6pt;">□ 法令宣導/簽署 แจ้งข้อกฎหมายให้ทราบ2เซ็นชื่อ  Tuyên truyền pháp lệnh / ký nhận  Pengarahan undang-undang/Penanda-tanganan   Laws & Decrees declare / signature </p>
+  <p style="font-size: 6pt;">□ 其他：อื่นๆ  Những điều khác  Lain-lain  Others {{三、 雇主/移工資訊提供}}</p>
+  <div class="section-title">四、主管批示意見及追蹤處理事項</div>
+  <p>Supervisor's comments & follow-up on handle matters</p>
+
+  <table>
+    <tr>
+      <td>單位主管簽章 Unit Supervisor's signature</td>
+      <td>服務人員簽章 Service Personnel's signature</td>
+      <td>雇主簽章 Employer's signature</td>
+      <td>工人簽章 คนงานเซ็นชื่อ Lao động ký tên TKI  Worker's signature</td>
+    </tr>
+    <tr>
+      <td><div class="signature-box">{{單位主管簽名}}</div></td>
+      <td><div class="signature-box">{{服務人員簽名}}</div></td>
+      <td><div class="signature-box">{{雇主簽名}}</div></td>
+      <td><div class="signature-box">{{工人簽名}}</div></td>
+    </tr>
+  </table>
+
+  <p>如果您對此次服務人員、內容、態度、處理結果有任何不滿意之處，敬請告知本公司。申訴電話：04-7785333，我們將加以改進，並給您滿意的答覆。</p>
+</body>
+</html>

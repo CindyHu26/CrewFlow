@@ -1,0 +1,84 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 使用者集合的規則
+    match /users/{userId} {
+      allow read: if true; // 允許讀取用戶資料用於登入驗證
+      allow write: if false; // 只允許通過後端或管理員新增使用者
+    }
+    
+    // 請假申請的規則
+    match /leaves/{leaveId} {
+      allow read: if true; // 暫時允許所有讀取，之後可以根據用戶角色限制
+      allow create: if true; // 允許創建請假申請
+      allow update: if true; // 允許更新（用於審核）
+      allow delete: if false; // 不允許刪除
+    }
+    
+    // 服務紀錄主表的規則
+    match /services/{serviceId} {
+      allow read: if true;
+      allow write: if true; // 允許創建和更新服務紀錄
+    }
+
+    // 收取/交付物件子表的規則
+    match /sub_items/{itemId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // 收支明細子表的規則
+    match /expenses/{expenseId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // 回報公司事項子表的規則
+    match /reports/{reportId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    
+    // 客戶資料的規則
+    match /customers/{customerId} {
+      allow read: if 
+        // 允許管理員讀取所有客戶資料
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+        // 允許經理讀取其區域的客戶資料
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager' &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.region == resource.data.region) ||
+        // 允許建立者讀取
+        resource.data.created_by == request.auth.uid ||
+        // 允許被授權的用戶讀取
+        request.auth.uid in resource.data.authorized_users;
+      
+      allow create: if 
+        // 允許員工和經理建立客戶資料
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['employee', 'manager', 'admin'] &&
+        // 確保必要欄位存在
+        request.resource.data.created_by == request.auth.uid &&
+        request.resource.data.created_at == request.time &&
+        request.resource.data.updated_at == request.time &&
+        request.resource.data.authorized_users is list;
+      
+      allow update: if
+        // 允許建立者更新
+        resource.data.created_by == request.auth.uid ||
+        // 允許管理員更新
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+        // 允許區域經理更新其區域的客戶資料
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager' &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.region == resource.data.region);
+
+      allow delete: if
+        // 允許建立者刪除
+        resource.data.created_by == request.auth.uid ||
+        // 允許管理員刪除
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+        // 允許區域經理刪除其區域的客戶資料
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager' &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.region == resource.data.region);
+    }
+  }
+} 
