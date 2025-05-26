@@ -83,7 +83,7 @@ export default function ServiceDetailPage() {
               返回我的服務紀錄
             </button>
             <button
-              onClick={() => router.push(`/services/edit/${id}`)}
+              onClick={() => router.push(`/services/${id}/edit`)}
               className="bg-blue-100 text-blue-700 px-4 py-2 rounded-md hover:bg-blue-200"
             >
               編輯
