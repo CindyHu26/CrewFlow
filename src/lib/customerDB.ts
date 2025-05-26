@@ -140,12 +140,19 @@ export const customerDB = {
         throw new Error('使用者未登入或資料不完整');
       }
 
-      const q = query(
-          collection(db, COLLECTION_NAME),
-          where('authorized_users', 'array-contains', currentUser.employee_id),
-        where('status', '==', 'active'),
-        orderBy('name')
+      let q;
+      // 如果使用者是經理級以上（position_level > 2），可以看到所有客戶
+      if (currentUser.position_level > 2) {
+        q = query(
+          collection(db, COLLECTION_NAME)
         );
+      } else {
+        // 一般使用者只能看到被授權的客戶
+        q = query(
+          collection(db, COLLECTION_NAME),
+          where('authorized_users', 'array-contains', currentUser.employee_id)
+        );
+      }
 
       console.log('執行查詢...');
       const querySnapshot = await getDocs(q);
@@ -166,11 +173,14 @@ export const customerDB = {
         } as Customer;
       });
 
+      // 在記憶體中進行排序
+      customers.sort((a, b) => a.name.localeCompare(b.name));
+
       console.log('返回客戶列表，數量:', customers.length);
       return customers;
     } catch (error) {
       console.error('取得可訪問的客戶列表時發生錯誤:', error);
-        throw new Error('取得客戶列表失敗');
+      throw new Error('取得客戶列表失敗');
     }
   },
 
