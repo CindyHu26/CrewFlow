@@ -27,7 +27,7 @@ export default function MyServicesList({ services }: MyServicesListProps) {
     console.log('MyServicesList received services:', services);
     if (services && services.length > 0) {
       console.log('First service record:', services[0]);
-    }
+      }
   }, [services]);
 
   const handleFilterChange = (field: string, value: any) => {
@@ -66,27 +66,27 @@ export default function MyServicesList({ services }: MyServicesListProps) {
           return false;
         }
 
-        const serviceDate = service.timestamp.toDate();
+      const serviceDate = service.timestamp.toDate();
         console.log('Service date:', serviceDate);
         
-        const startDate = new Date(filters.dateRange.start + 'T00:00:00');
-        const endDate = new Date(filters.dateRange.end + 'T23:59:59.999');
+      const startDate = new Date(filters.dateRange.start + 'T00:00:00');
+      const endDate = new Date(filters.dateRange.end + 'T23:59:59.999');
         console.log('Date range:', { startDate, endDate });
 
-        const dateMatches = serviceDate >= startDate && serviceDate <= endDate;
+      const dateMatches = serviceDate >= startDate && serviceDate <= endDate;
         console.log('Date matches:', dateMatches);
-        
-        const customerMatches = !filters.customerName || 
+      
+      const customerMatches = !filters.customerName || 
           (service.customer_names && service.customer_names.some(name => 
-            name.toLowerCase().includes(filters.customerName.toLowerCase())
+          name.toLowerCase().includes(filters.customerName.toLowerCase())
           ));
         console.log('Customer matches:', customerMatches);
 
-        const workerMatches = !filters.workerName || 
+      const workerMatches = !filters.workerName || 
           (service.worker_name && service.worker_name.toLowerCase().includes(filters.workerName.toLowerCase()));
         console.log('Worker matches:', workerMatches);
 
-        const contentMatches = !filters.content || 
+      const contentMatches = !filters.content || 
           (service.handling_process && service.handling_process.toLowerCase().includes(filters.content.toLowerCase())) ||
           (service.handling_result && service.handling_result.toLowerCase().includes(filters.content.toLowerCase()));
         console.log('Content matches:', contentMatches);
@@ -197,43 +197,43 @@ export default function MyServicesList({ services }: MyServicesListProps) {
 
       {/* 服務紀錄列表 */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 日期
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                客戶名稱
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  客戶名稱
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 工人姓名
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                服務內容
-              </th>
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  服務內容
+                </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 操作
               </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {filteredServices.map((service) => (
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {filteredServices.map((service) => (
               <tr key={service.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {format(service.timestamp.toDate(), 'yyyy-MM-dd')}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {service.customer_names?.join(', ') || '無'}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {service.worker_name || '無'}
-                </td>
+                  </td>
                 <td className="px-6 py-4 text-sm text-gray-500">
                   <div className="max-w-xs truncate">
                     {service.handling_process || '無'}
-                  </div>
-                </td>
+                    </div>
+                  </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <button
                     onClick={() => router.push(`/services/${service.id}`)}
@@ -242,11 +242,11 @@ export default function MyServicesList({ services }: MyServicesListProps) {
                     查看詳情
                   </button>
                 </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
     </div>
   );
 } 

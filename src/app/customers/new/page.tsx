@@ -108,35 +108,35 @@ export default function NewCustomerPage() {
                 {error}
               </div>
             )}
-
+            
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    客戶代號
-                  </label>
-                  <input
-                    type="text"
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  客戶代號
+                </label>
+                <input
+                  type="text"
                     name="code"
-                    value={formData.code}
+                  value={formData.code}
                     onChange={handleChange}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-100"
-                  />
-                </div>
+                />
+              </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    客戶名稱
-                  </label>
-                  <input
-                    type="text"
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  客戶名稱
+                </label>
+                <input
+                  type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-100"
-                  />
-                </div>
+                  required
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-100"
+                />
+              </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
@@ -162,46 +162,46 @@ export default function NewCustomerPage() {
                     onChange={handleChange}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-100"
                   />
-                </div>
+              </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    地址
-                  </label>
-                  <input
-                    type="text"
+                <label className="block text-sm font-medium text-gray-700">
+                  地址
+                </label>
+                <input
+                  type="text"
                     name="address"
                     value={formData.address || ''}
                     onChange={handleChange}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-100"
-                  />
-                </div>
+                />
+              </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    負責人
-                  </label>
-                  <input
-                    type="text"
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  負責人
+                </label>
+                <input
+                  type="text"
                     name="owner"
                     value={formData.owner || ''}
                     onChange={handleChange}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-100"
-                  />
-                </div>
+                />
+              </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    聯絡人
-                  </label>
-                  <input
-                    type="text"
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  聯絡人
+                </label>
+                <input
+                  type="text"
                     name="contact"
                     value={formData.contact || ''}
                     onChange={handleChange}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-100"
-                  />
-                </div>
+                />
+              </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
@@ -227,49 +227,49 @@ export default function NewCustomerPage() {
                     onChange={handleChange}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-100"
                   />
-                </div>
+              </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
                     傳真
-                  </label>
-                  <input
-                    type="tel"
+                </label>
+                <input
+                  type="tel"
                     name="fax"
                     value={formData.fax || ''}
                     onChange={handleChange}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-100"
-                  />
-                </div>
+                />
+              </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    客戶類別
-                  </label>
-                  <select
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  客戶類別
+                </label>
+                <select
                     name="category"
-                    value={formData.category}
+                  value={formData.category}
                     onChange={handleChange}
                     required
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-100"
-                  >
-                    <option value="工廠">工廠</option>
-                    <option value="個人">個人</option>
-                    <option value="養護機構">養護機構</option>
-                  </select>
-                </div>
+                >
+                  <option value="工廠">工廠</option>
+                  <option value="個人">個人</option>
+                  <option value="養護機構">養護機構</option>
+                </select>
+              </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    內勤人員
-                  </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  內勤人員
+                </label>
                   <div className="border rounded bg-gray-50 p-2 max-h-40 overflow-y-auto">
-                    {users
-                      .filter(user => user.departments.includes('行政'))
+                  {users
+                    .filter(user => user.departments.includes('行政'))
                       .map(user => (
                         <div key={user.id} className="flex items-center mb-1">
-                          <input
-                            type="checkbox"
+                      <input
+                        type="checkbox"
                             id={`internal-${user.id}`}
                             name="internal_staff"
                             value={user.id}
@@ -282,23 +282,23 @@ export default function NewCustomerPage() {
                             className="ml-2 block text-sm text-gray-900"
                           >
                             {user.name}
-                          </label>
+                    </label>
                         </div>
-                      ))}
-                  </div>
+                  ))}
                 </div>
+              </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    外勤人員
-                  </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  外勤人員
+                </label>
                   <div className="border rounded bg-gray-50 p-2 max-h-40 overflow-y-auto">
-                    {users
-                      .filter(user => user.departments.includes('服務'))
+                  {users
+                    .filter(user => user.departments.includes('服務'))
                       .map(user => (
                         <div key={user.id} className="flex items-center mb-1">
-                          <input
-                            type="checkbox"
+                      <input
+                        type="checkbox"
                             id={`external-${user.id}`}
                             name="external_staff"
                             value={user.id}
@@ -311,9 +311,9 @@ export default function NewCustomerPage() {
                             className="ml-2 block text-sm text-gray-900"
                           >
                             {user.name}
-                          </label>
+                    </label>
                         </div>
-                      ))}
+                  ))}
                   </div>
                 </div>
               </div>

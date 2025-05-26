@@ -721,7 +721,7 @@ export default function NewServicePage() {
       } else {
         // 如果還沒選擇，就新增這個客戶
         const customerData = await customerDB.getCustomer(customerId, currentUser);
-        if (customerData) {
+      if (customerData) {
           const newCustomer = {
             id: customerData.id,
             name: customerData.name,
@@ -730,8 +730,8 @@ export default function NewServicePage() {
           };
           
           setSelectedCustomers(prev => [...prev, newCustomer]);
-          setFormData(prev => ({
-            ...prev,
+        setFormData(prev => ({
+          ...prev,
             customer_names: [...prev.customer_names, customerData.name]
           }));
 
@@ -741,12 +741,12 @@ export default function NewServicePage() {
             if (customerData.category === '工廠') {
               defaultJobType = '廠工';
             }
-            setSelectedJobTypes([defaultJobType]);
-            setFormData(prev => ({
-              ...prev,
+          setSelectedJobTypes([defaultJobType]);
+          setFormData(prev => ({
+            ...prev,
               job_types: [defaultJobType]
-            }));
-          }
+          }));
+        }
 
           // 合併所有已選擇客戶的授權使用者
           const allAuthorizedUsers = new Set<string>();
@@ -770,10 +770,10 @@ export default function NewServicePage() {
             .filter(staff => defaultPartners.includes(staff.id))
             .map(staff => staff.name);
           
-          setFormData(prev => ({
-            ...prev,
+        setFormData(prev => ({
+          ...prev,
             partner_names: partnerNames
-          }));
+        }));
         }
       }
     } catch (error) {

@@ -6,6 +6,14 @@ import type { Firestore } from 'firebase/firestore';
 import { Service, ServiceFormData, SubItem, Expense, Report } from '@/types/service';
 import { format } from 'date-fns';
 
+// 定義 User 型別
+interface User {
+  employee_id: string;
+  name: string;
+  departments?: string[];
+  position?: string;
+}
+
 const COLLECTION_NAME = 'services';
 const SUB_ITEMS_COLLECTION = 'sub_items';
 const EXPENSES_COLLECTION = 'expenses';
@@ -103,15 +111,24 @@ export const serviceDB = {
   // 取得單一服務紀錄
   async getServiceRecord(id: string): Promise<Service | null> {
     try {
+      console.log('開始查詢服務紀錄，ID:', id);
+      
       const docRef = doc(db, COLLECTION_NAME, id);
+      console.log('準備取得文件...');
+      
       const docSnap = await getDoc(docRef);
+      console.log('文件存在狀態:', docSnap.exists());
       
       if (!docSnap.exists()) {
+        console.log('找不到服務紀錄');
         return null;
       }
 
+      const data = docSnap.data();
+      console.log('服務紀錄資料:', data);
+
       return {
-        ...docSnap.data(),
+        ...data,
         id: docSnap.id
       } as Service;
     } catch (error) {
@@ -440,6 +457,51 @@ export const serviceDB = {
     const unique = new Map<string, Service>();
     allServices.forEach(s => unique.set(s.id, s));
     return Array.from(unique.values()).sort((a, b) => b.timestamp.toDate().getTime() - a.timestamp.toDate().getTime());
+  },
+
+  // 取得指定日期範圍的服務紀錄
+  async getServiceRecordsByDateRange(
+    startDate: Date,
+    endDate: Date,
+    currentUser: User
+  ): Promise<any[]> {
+    try {
+      console.log('準備查詢服務紀錄:', {
+        startDate,
+        endDate,
+        currentUser: currentUser.employee_id
+      });
+
+      // 先取得日期範圍內的所有服務紀錄
+      const q = query(
+        collection(db, COLLECTION_NAME),
+        where('timestamp', '>=', Timestamp.fromDate(startDate)),
+        where('timestamp', '<=', Timestamp.fromDate(endDate))
+      );
+
+      console.log('執行查詢...');
+      const querySnapshot = await getDocs(q);
+      console.log('查詢結果數量:', querySnapshot.size);
+
+      const records = querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        console.log('服務紀錄資料:', { 
+          id: doc.id, 
+          customer_names: data.customer_names,
+          timestamp: data.timestamp,
+          staff_name: data.staff_name
+        });
+        return {
+          id: doc.id,
+          ...data
+        };
+      });
+
+      return records;
+    } catch (error) {
+      console.error('取得服務紀錄時發生錯誤:', error);
+      throw new Error('取得服務紀錄失敗');
+    }
   }
 };
 

@@ -139,7 +139,7 @@ export const customerDB = {
         console.error('使用者未登入或資料不完整');
         throw new Error('使用者未登入或資料不完整');
       }
-
+      
       let q;
       // 如果使用者是經理級以上（position_level > 2），可以看到所有客戶
       if (currentUser.position_level > 2) {
@@ -180,7 +180,7 @@ export const customerDB = {
       return customers;
     } catch (error) {
       console.error('取得可訪問的客戶列表時發生錯誤:', error);
-      throw new Error('取得客戶列表失敗');
+        throw new Error('取得客戶列表失敗');
     }
   },
 

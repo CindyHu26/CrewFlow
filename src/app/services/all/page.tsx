@@ -283,164 +283,164 @@ export default function AllServicesPage() {
         {/* Tab 內容 */}
         {activeTab === 'services' && (
           <>
-            <div className="bg-white p-4 rounded-lg shadow mb-6">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    開始日期
-                  </label>
-                  <input
-                    type="date"
-                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                    value={filters.dateRange.start}
-                    onChange={(e) => handleFilterChange('dateRange', { start: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    結束日期
-                  </label>
-                  <input
-                    type="date"
-                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                    value={filters.dateRange.end}
-                    onChange={(e) => handleFilterChange('dateRange', { end: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    客戶名稱
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                    value={filters.customerName}
-                    onChange={(e) => handleFilterChange('customerName', e.target.value)}
-                    placeholder="搜尋客戶名稱"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    服務人員
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                    value={filters.staffName}
-                    onChange={(e) => handleFilterChange('staffName', e.target.value)}
-                    placeholder="搜尋服務人員"
-                  />
-                </div>
-              </div>
-              <div className="mt-4 flex justify-end">
-                <button
-                  onClick={resetFilters}
-                  className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                >
-                  重置
-                </button>
-              </div>
+        <div className="bg-white p-4 rounded-lg shadow mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                開始日期
+              </label>
+              <input
+                type="date"
+                className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                value={filters.dateRange.start}
+                onChange={(e) => handleFilterChange('dateRange', { start: e.target.value })}
+              />
             </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                結束日期
+              </label>
+              <input
+                type="date"
+                className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                value={filters.dateRange.end}
+                onChange={(e) => handleFilterChange('dateRange', { end: e.target.value })}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                客戶名稱
+              </label>
+              <input
+                type="text"
+                className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                value={filters.customerName}
+                onChange={(e) => handleFilterChange('customerName', e.target.value)}
+                placeholder="搜尋客戶名稱"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                服務人員
+              </label>
+              <input
+                type="text"
+                className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                value={filters.staffName}
+                onChange={(e) => handleFilterChange('staffName', e.target.value)}
+                placeholder="搜尋服務人員"
+              />
+            </div>
+          </div>
+          <div className="mt-4 flex justify-end">
+            <button
+              onClick={resetFilters}
+              className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+            >
+              重置
+            </button>
+          </div>
+        </div>
 
-            <div className="bg-white shadow rounded-lg overflow-hidden">
-              <table className="min-w-full divide-y divide-gray-300">
-                <thead>
-                  <tr>
-                    <th 
-                      scope="col" 
-                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 cursor-pointer"
-                      onClick={() => handleSort('username')}
-                    >
-                      建立者 {getSortIcon('username')}
-                    </th>
-                    <th 
-                      scope="col" 
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 cursor-pointer"
-                      onClick={() => handleSort('customer')}
-                    >
-                      客戶名稱 {getSortIcon('customer')}
-                    </th>
-                    <th 
-                      scope="col" 
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 cursor-pointer"
-                      onClick={() => handleSort('serviceDate')}
-                    >
-                      服務日期 {getSortIcon('serviceDate')}
-                    </th>
-                    <th 
-                      scope="col" 
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                    >
-                      服務內容
-                    </th>
-                    <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                      <span className="sr-only">操作</span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {filteredServices.length === 0 ? (
-                    <tr>
-                      <td colSpan={5} className="py-10 text-center text-sm text-gray-500">
-                        目前沒有符合條件的服務紀錄
-                      </td>
-                    </tr>
-                  ) : (
-                    filteredServices.map((service: Service) => (
-                      <tr key={service.id} className="hover:bg-gray-50">
-                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                          {service.staff_name}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {service.customer_names.join(', ')}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {service.timestamp ? 
-                            format(service.timestamp.toDate(), 'yyyy/MM/dd') :
-                            '無日期資料'}
-                        </td>
-                        <td className="px-3 py-4 text-sm text-gray-500">
-                          <div className="space-y-2">
-                            {service.service_feedback_employer && (
-                              <div>
-                                <span className="font-medium text-gray-700">雇主反映：</span>
-                                <span className="text-gray-600">{service.service_feedback_employer}</span>
-                              </div>
-                            )}
-                            {service.service_feedback_worker && (
-                              <div>
-                                <span className="font-medium text-gray-700">移工反映：</span>
-                                <span className="text-gray-600">{service.service_feedback_worker}</span>
-                              </div>
-                            )}
-                            {service.handling_process && (
-                              <div>
-                                <span className="font-medium text-gray-700">處理經過：</span>
-                                <span className="text-gray-600">{service.handling_process}</span>
-                              </div>
-                            )}
-                            {service.handling_result && (
-                              <div>
-                                <span className="font-medium text-gray-700">處理結果：</span>
-                                <span className="text-gray-600">{service.handling_result}</span>
-                              </div>
-                            )}
+        <div className="bg-white shadow rounded-lg overflow-hidden">
+          <table className="min-w-full divide-y divide-gray-300">
+            <thead>
+              <tr>
+                <th 
+                  scope="col" 
+                  className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 cursor-pointer"
+                  onClick={() => handleSort('username')}
+                >
+                  建立者 {getSortIcon('username')}
+                </th>
+                <th 
+                  scope="col" 
+                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 cursor-pointer"
+                  onClick={() => handleSort('customer')}
+                >
+                  客戶名稱 {getSortIcon('customer')}
+                </th>
+                <th 
+                  scope="col" 
+                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 cursor-pointer"
+                  onClick={() => handleSort('serviceDate')}
+                >
+                  服務日期 {getSortIcon('serviceDate')}
+                </th>
+                <th 
+                  scope="col" 
+                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                >
+                  服務內容
+                </th>
+                <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                  <span className="sr-only">操作</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {filteredServices.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="py-10 text-center text-sm text-gray-500">
+                    目前沒有符合條件的服務紀錄
+                  </td>
+                </tr>
+              ) : (
+                filteredServices.map((service: Service) => (
+                  <tr key={service.id} className="hover:bg-gray-50">
+                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                      {service.staff_name}
+                    </td>
+                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      {service.customer_names.join(', ')}
+                    </td>
+                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      {service.timestamp ? 
+                        format(service.timestamp.toDate(), 'yyyy/MM/dd') :
+                        '無日期資料'}
+                    </td>
+                    <td className="px-3 py-4 text-sm text-gray-500">
+                      <div className="space-y-2">
+                        {service.service_feedback_employer && (
+                          <div>
+                            <span className="font-medium text-gray-700">雇主反映：</span>
+                            <span className="text-gray-600">{service.service_feedback_employer}</span>
                           </div>
-                        </td>
-                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                          <button
-                            className="text-indigo-600 hover:text-indigo-900"
-                            onClick={() => router.push(`/services/${service.id}`)}
-                          >
-                            查看詳情
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+                        )}
+                        {service.service_feedback_worker && (
+                          <div>
+                            <span className="font-medium text-gray-700">移工反映：</span>
+                            <span className="text-gray-600">{service.service_feedback_worker}</span>
+                          </div>
+                        )}
+                        {service.handling_process && (
+                          <div>
+                            <span className="font-medium text-gray-700">處理經過：</span>
+                            <span className="text-gray-600">{service.handling_process}</span>
+                          </div>
+                        )}
+                        {service.handling_result && (
+                          <div>
+                            <span className="font-medium text-gray-700">處理結果：</span>
+                            <span className="text-gray-600">{service.handling_result}</span>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                      <button
+                        className="text-indigo-600 hover:text-indigo-900"
+                        onClick={() => router.push(`/services/${service.id}`)}
+                      >
+                        查看詳情
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
           </>
         )}
         {activeTab === 'reports' && (
