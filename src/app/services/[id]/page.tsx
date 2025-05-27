@@ -133,13 +133,7 @@ export default function ServiceDetailPage() {
                         {format(report.created_at.toDate(), 'yyyy/MM/dd HH:mm')}
                       </span>
                     </div>
-                    <div className="text-gray-700 whitespace-pre-wrap">{report.body}</div>
-                    {report.handling_note && (
-                      <div className="mt-2 text-sm">
-                        <span className="text-gray-600">處理備註：</span>
-                        <span className="text-gray-700">{report.handling_note}</span>
-                      </div>
-                    )}
+                    <div className="text-gray-700 whitespace-pre-wrap">{report.content}</div>
                     <div className="mt-2 text-sm">
                       <span className="text-gray-600">狀態：</span>
                       <span className={`${

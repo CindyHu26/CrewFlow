@@ -1,18 +1,13 @@
 'use client';
 
 import { collection, addDoc, updateDoc, doc, getDoc, getDocs, query, where, orderBy, Timestamp, serverTimestamp, deleteDoc, runTransaction } from 'firebase/firestore';
-import { db as rawDb } from './firebase';
+import { db as rawDb, storage } from './firebase';
 import type { Firestore } from 'firebase/firestore';
 import { Service, ServiceFormData, SubItem, Expense, Report } from '@/types/service';
+import { User } from '@/types';
 import { format } from 'date-fns';
-
-// 定義 User 型別
-interface User {
-  employee_id: string;
-  name: string;
-  departments?: string[];
-  position?: string;
-}
+import { User as FirebaseUser } from 'firebase/auth';
+import { ref, uploadBytes, getDownloadURL, FirebaseStorage } from 'firebase/storage';
 
 const COLLECTION_NAME = 'services';
 const SUB_ITEMS_COLLECTION = 'sub_items';
@@ -21,8 +16,9 @@ const REPORTS_COLLECTION = 'reports';
 const USERS_COLLECTION = 'users';
 const CUSTOMERS_COLLECTION = 'customers';
 
-// 明確標註 db 型別
+// 明確標註 db 和 storage 型別
 const db: Firestore = rawDb as Firestore;
+const firebaseStorage: FirebaseStorage = storage as FirebaseStorage;
 
 // 生成紀錄編號
 export function generateServiceId(): string {
@@ -36,47 +32,86 @@ export const serviceDB = {
   // 建立服務紀錄
   async createServiceRecord(data: ServiceFormData): Promise<string> {
     try {
+      // 檢查客戶名稱
+      if (!data.customer_names || data.customer_names.length === 0) {
+        throw new Error('請至少選擇一個客戶');
+      }
+
+      // 將 service_date 轉換為 Timestamp
+      const serviceDate = new Date(data.service_date);
+      if (isNaN(serviceDate.getTime())) {
+        throw new Error('無效的日期格式');
+      }
+
       const record: Omit<Service, 'id'> = {
-        ...data,
+        timestamp: Timestamp.fromDate(serviceDate),
+        handling_process: data.handling_process || '',
+        handling_result: data.handling_result || '',
+        customer_id: data.customer_id || '',
+        signature: data.signature || '',
+        service_feedback_employer: data.service_feedback_employer || '',
+        service_feedback_worker: data.service_feedback_worker || '',
+        expenses: data.expenses || [],
+        sub_items: data.sub_items || [],
+        reports: data.reports || [],
+        photos: data.photos || [],
+        partners: data.partner_names || [],
+        nationalities: data.nationalities || [],
+        job_types: data.job_types || [],
         created_at: Timestamp.now(),
         updated_at: Timestamp.now(),
-        status: 'draft'
+        status: data.status || 'draft',
+        customer_names: Array.isArray(data.customer_names) ? data.customer_names : [],
+        staff_name: data.staff_name || '',
+        partner_names: data.partner_names || [],
+        photo_urls: data.photo_urls || [],
+        worker_name: data.worker_name || '',
+        employer_signature: data.employer_signature || '',
+        worker_signature: data.worker_signature || '',
+        service_signature: data.service_signature || '',
+        shared_info: data.shared_info || '',
+        total_amount: data.total_amount || 0
       };
 
+      console.log('準備建立服務紀錄:', record);
+
       const docRef = await addDoc(collection(db, COLLECTION_NAME), record);
+      console.log('服務紀錄建立成功，ID:', docRef.id);
 
       // 建立子表記錄
-      await Promise.all([
-        ...data.sub_items.map(item => 
-          addDoc(collection(db, SUB_ITEMS_COLLECTION), {
-            ...item,
-            service_id: docRef.id,
-            created_at: Timestamp.now(),
-            updated_at: Timestamp.now()
-          })
-        ),
-        ...data.expenses.map(expense => 
-          addDoc(collection(db, EXPENSES_COLLECTION), {
-            ...expense,
-            service_id: docRef.id,
-            created_at: Timestamp.now(),
-            updated_at: Timestamp.now()
-          })
-        ),
-        ...data.reports.map(report => 
-          addDoc(collection(db, REPORTS_COLLECTION), {
-            ...report,
-            service_id: docRef.id,
-            created_at: Timestamp.now(),
-            updated_at: Timestamp.now()
-          })
-        )
-      ]);
+      if (data.sub_items?.length || data.expenses?.length || data.reports?.length) {
+        await Promise.all([
+          ...(data.sub_items || []).map(item => 
+            addDoc(collection(db, SUB_ITEMS_COLLECTION), {
+              ...item,
+              service_id: docRef.id,
+              created_at: Timestamp.now(),
+              updated_at: Timestamp.now()
+            })
+          ),
+          ...(data.expenses || []).map(expense => 
+            addDoc(collection(db, EXPENSES_COLLECTION), {
+              ...expense,
+              service_id: docRef.id,
+              created_at: Timestamp.now(),
+              updated_at: Timestamp.now()
+            })
+          ),
+          ...(data.reports || []).map(report => 
+            addDoc(collection(db, REPORTS_COLLECTION), {
+              ...report,
+              service_id: docRef.id,
+              created_at: Timestamp.now(),
+              updated_at: Timestamp.now()
+            })
+          )
+        ]);
+      }
 
       return docRef.id;
     } catch (error) {
       console.error('建立服務紀錄時發生錯誤:', error);
-      throw new Error('建立服務紀錄失敗');
+      throw error; // 拋出原始錯誤以便更好地診斷問題
     }
   },
 
@@ -502,6 +537,89 @@ export const serviceDB = {
       console.error('取得服務紀錄時發生錯誤:', error);
       throw new Error('取得服務紀錄失敗');
     }
+  },
+
+  // 取得員工列表
+  async getStaffList(): Promise<Array<{ id: string; name: string; departments?: string[] }>> {
+    try {
+      console.log('正在取得員工列表...');
+      const usersRef = collection(db, 'users');
+      const snapshot = await getDocs(usersRef);
+      const staffList = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as Array<{ id: string; name: string; departments?: string[] }>;
+      
+      console.log('取得員工列表成功:', staffList);
+      return staffList;
+    } catch (error) {
+      console.error('取得員工列表時發生錯誤:', error);
+      throw new Error('取得員工列表失敗');
+    }
+  },
+
+  // 取得客戶列表
+  async getCustomerList(): Promise<Array<{ id: string; name: string; category?: string }>> {
+    try {
+      console.log('正在取得客戶列表...');
+      const customerRef = collection(db, 'customers');
+      const snapshot = await getDocs(customerRef);
+      const customerList = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as Array<{ id: string; name: string; category?: string }>;
+      
+      console.log('取得客戶列表成功:', customerList);
+      return customerList;
+    } catch (error) {
+      console.error('取得客戶列表時發生錯誤:', error);
+      throw new Error('取得客戶列表失敗');
+    }
+  },
+
+  // 上傳照片
+  async uploadPhotos(files: FileList) {
+    try {
+      const uploadPromises = Array.from(files).map(async (file) => {
+        const storageRef = ref(firebaseStorage, `services/${Date.now()}_${file.name}`);
+        await uploadBytes(storageRef, file);
+        return await getDownloadURL(storageRef);
+      });
+
+      return await Promise.all(uploadPromises);
+    } catch (error) {
+      console.error('上傳照片時發生錯誤:', error);
+      throw error;
+    }
+  },
+
+  // 刪除子表資料
+  async deleteByServiceId(serviceId: string) {
+    try {
+      // 刪除子表項目
+      const subItemsRef = collection(db, 'sub_items');
+      const subItemsQuery = query(subItemsRef, where('service_id', '==', serviceId));
+      const subItemsSnapshot = await getDocs(subItemsQuery);
+      const subItemsDeletePromises = subItemsSnapshot.docs.map(doc => deleteDoc(doc.ref));
+      await Promise.all(subItemsDeletePromises);
+
+      // 刪除收支明細
+      const expensesRef = collection(db, 'expenses');
+      const expensesQuery = query(expensesRef, where('service_id', '==', serviceId));
+      const expensesSnapshot = await getDocs(expensesQuery);
+      const expensesDeletePromises = expensesSnapshot.docs.map(doc => deleteDoc(doc.ref));
+      await Promise.all(expensesDeletePromises);
+
+      // 刪除回報事項
+      const reportsRef = collection(db, 'reports');
+      const reportsQuery = query(reportsRef, where('service_id', '==', serviceId));
+      const reportsSnapshot = await getDocs(reportsQuery);
+      const reportsDeletePromises = reportsSnapshot.docs.map(doc => deleteDoc(doc.ref));
+      await Promise.all(reportsDeletePromises);
+    } catch (error) {
+      console.error('刪除子表資料時發生錯誤:', error);
+      throw error;
+    }
   }
 };
 
@@ -515,11 +633,19 @@ export const subItemDB = {
         where('service_id', '==', serviceId)
       );
       const querySnapshot = await getDocs(q);
-      const items = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      } as SubItem));
-      return items.sort((a, b) => a.created_at.toDate().getTime() - b.created_at.toDate().getTime());
+      return querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          service_id: data.service_id || serviceId,
+          category: data.category || '',
+          item_name: data.item_name || '',
+          quantity: data.quantity || 0,
+          note: data.note || '',
+          created_at: data.created_at || Timestamp.now(),
+          updated_at: data.updated_at || Timestamp.now()
+        } as SubItem;
+      });
     } catch (error) {
       console.error('取得收取/交付物件列表時發生錯誤:', error);
       throw error;
@@ -529,7 +655,7 @@ export const subItemDB = {
   // 建立收取/交付物件
   async createSubItem(item: Omit<SubItem, 'id'>): Promise<string> {
     try {
-      const docRef = await addDoc(collection(db, 'sub_items'), {
+      const docRef = await addDoc(collection(db, SUB_ITEMS_COLLECTION), {
         ...item,
         created_at: Timestamp.now(),
         updated_at: Timestamp.now()
@@ -552,11 +678,19 @@ export const expenseDB = {
         where('service_id', '==', serviceId)
       );
       const querySnapshot = await getDocs(q);
-      const expenses = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      } as Expense));
-      return expenses.sort((a, b) => a.created_at.toDate().getTime() - b.created_at.toDate().getTime());
+      return querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          service_id: data.service_id || serviceId,
+          category: data.category || '',
+          item: data.item || '',
+          amount: data.amount || 0,
+          remark: data.remark || '',
+          created_at: data.created_at || Timestamp.now(),
+          updated_at: data.updated_at || Timestamp.now()
+        } as Expense;
+      });
     } catch (error) {
       console.error('取得收支明細列表時發生錯誤:', error);
       throw error;
@@ -566,7 +700,7 @@ export const expenseDB = {
   // 建立收支明細
   async createExpense(expense: Omit<Expense, 'id'>): Promise<string> {
     try {
-      const docRef = await addDoc(collection(db, 'expenses'), {
+      const docRef = await addDoc(collection(db, EXPENSES_COLLECTION), {
         ...expense,
         created_at: Timestamp.now(),
         updated_at: Timestamp.now()
@@ -589,10 +723,19 @@ export const reportDB = {
         where('service_id', '==', serviceId)
       );
       const querySnapshot = await getDocs(q);
-      const reports = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      } as Report));
+      const reports = querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          service_id: data.service_id || '',
+          type: data.type || '',
+          content: data.content || '',
+          is_urgent: data.is_urgent || false,
+          status: data.status || '',
+          created_at: data.created_at || Timestamp.now(),
+          updated_at: data.updated_at || Timestamp.now()
+        } as Report;
+      });
       return reports.sort((a, b) => b.created_at.toDate().getTime() - a.created_at.toDate().getTime());
     } catch (error) {
       console.error('取得回報事項列表時發生錯誤:', error);
@@ -609,10 +752,19 @@ export const reportDB = {
         where('status', '==', '待處理')
       );
       const querySnapshot = await getDocs(q);
-      const reports = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      } as Report));
+      const reports = querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          service_id: data.service_id || '',
+          type: data.type || '',
+          content: data.content || '',
+          is_urgent: data.is_urgent || false,
+          status: data.status || '',
+          created_at: data.created_at || Timestamp.now(),
+          updated_at: data.updated_at || Timestamp.now()
+        } as Report;
+      });
       return reports.sort((a, b) => b.created_at.toDate().getTime() - a.created_at.toDate().getTime());
     } catch (error) {
       console.error('取得緊急回報事項列表時發生錯誤:', error);
@@ -623,7 +775,7 @@ export const reportDB = {
   // 建立回報事項
   async createReport(report: Omit<Report, 'id'>): Promise<string> {
     try {
-      const docRef = await addDoc(collection(db, 'reports'), {
+      const docRef = await addDoc(collection(db, REPORTS_COLLECTION), {
         ...report,
         created_at: Timestamp.now(),
         updated_at: Timestamp.now()
@@ -672,7 +824,7 @@ export const updateSubTables = async (
 ) => {
   try {
     await runTransaction(db, async (transaction) => {
-      // 1. 取得現有的子表記錄
+      // 1. 刪除現有記錄
       const [subItemsQuery, expensesQuery, reportsQuery] = [
         query(collection(db, SUB_ITEMS_COLLECTION), where('service_id', '==', serviceId)),
         query(collection(db, EXPENSES_COLLECTION), where('service_id', '==', serviceId)),
@@ -697,8 +849,8 @@ export const updateSubTables = async (
       const createPromises = [
         ...sub_items.map(item => {
           const newDocRef = doc(collection(db, SUB_ITEMS_COLLECTION));
-          return transaction.set(newDocRef, { 
-            ...item, 
+          return transaction.set(newDocRef, {
+            ...item,
             service_id: serviceId,
             created_at: now,
             updated_at: now
@@ -706,8 +858,8 @@ export const updateSubTables = async (
         }),
         ...expenses.map(expense => {
           const newDocRef = doc(collection(db, EXPENSES_COLLECTION));
-          return transaction.set(newDocRef, { 
-            ...expense, 
+          return transaction.set(newDocRef, {
+            ...expense,
             service_id: serviceId,
             created_at: now,
             updated_at: now

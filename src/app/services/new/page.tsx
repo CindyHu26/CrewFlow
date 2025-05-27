@@ -334,7 +334,14 @@ export default function NewServicePage() {
     shared_info: '',          // 雇主/移工資訊提供
     sub_items: [],             // 收取/交付物件列表
     expenses: [],             // 收支明細列表
-    reports: []               // 回報事項列表
+    reports: [],              // 回報事項列表
+    service_date: new Date().toISOString().split('T')[0], // 服務日期
+    customer_id: '',          // 客戶 ID
+    signature: '',            // 簽名
+    photos: [],               // 照片
+    created_at: Timestamp.now(), // 建立時間
+    updated_at: Timestamp.now(), // 更新時間
+    status: 'draft' as const  // 狀態
   });
 
   // 新增照片預覽狀態
@@ -475,8 +482,9 @@ export default function NewServicePage() {
     const newExpense: Expense = {
       service_id: '',  // 會在儲存時設定
       category: '收入',
-      description: '',
+      item: '',
       amount: 0,
+      remark: '',
       created_at: timestamp,
       updated_at: timestamp
     };
@@ -532,7 +540,7 @@ export default function NewServicePage() {
     const newReport: Report = {
       service_id: '',  // 會在儲存時設定
       type: '客戶反映',
-      body: '',
+      content: '',
       is_urgent: false,
       status: '待處理',
       created_at: Timestamp.now(),
@@ -571,8 +579,15 @@ export default function NewServicePage() {
       // 設定當前使用者為服務人員
       const updatedData = {
         ...formData,
-        staff_name: user.name || ''
+        staff_name: user.name || '',
+        customer_names: selectedCustomers.map(c => c.name),
+        customer_id: selectedCustomers[0]?.id || '',
+        service_date: formData.timestamp.toDate().toISOString(),
+        status: 'draft' as const,
+        timestamp: timestamp
       };
+
+      console.log('準備提交的資料:', updatedData);
 
       // 建立服務紀錄
       const serviceId = await serviceDB.createServiceRecord(updatedData);
@@ -610,7 +625,7 @@ export default function NewServicePage() {
       router.push('/services');
     } catch (error) {
       console.error('建立服務紀錄時發生錯誤:', error);
-      // TODO: 顯示錯誤訊息
+      alert('建立服務紀錄失敗，請檢查所有必填欄位是否已填寫');
     }
   };
 
@@ -623,7 +638,7 @@ export default function NewServicePage() {
 
   const formatExpenses = () => {
     return formData.expenses.map(exp => 
-      `${exp.category}: ${exp.description} (${Math.abs(exp.amount)}元)`
+      `${exp.category}: ${exp.item} (${Math.abs(exp.amount)}元)`
     ).join('\n');
   };
 
@@ -863,12 +878,7 @@ export default function NewServicePage() {
 
   // 處理收支明細項目選擇
   const handleExpenseItemSelect = (index: number, selectedItem: string) => {
-    updateExpense(index, 'description', selectedItem);
-  };
-
-  // 處理收取/交付物件項目選擇
-  const handleSubItemSelect = (index: number, selectedItems: string[]) => {
-    updateSubItem(index, 'item_name', selectedItems.join('、'));
+    updateExpense(index, 'item', selectedItem);
   };
 
   return (
@@ -1037,8 +1047,8 @@ export default function NewServicePage() {
                   <div className="relative">
                   <input
                     type="text"
-                    value={expense.description}
-                    onChange={(e) => updateExpense(index, 'description', e.target.value)}
+                    value={expense.item}
+                    onChange={(e) => updateExpense(index, 'item', e.target.value)}
                     placeholder="說明"
                     className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm bg-gray-100 h-10"
                       list={`expense-items-${index}`}
@@ -1287,8 +1297,8 @@ export default function NewServicePage() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700">回報內容</label>
                   <textarea
-                    value={report.body}
-                    onChange={(e) => updateReport(index, 'body', e.target.value)}
+                    value={report.content}
+                    onChange={(e) => updateReport(index, 'content', e.target.value)}
                     rows={3}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-100"
                   />

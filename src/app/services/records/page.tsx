@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
 import { customerDB } from '@/lib/customerDB';
 import { serviceDB } from '@/lib/serviceDB';
-import { Customer } from '@/types';
+import { Customer, User } from '@/types';
 import { useUsers } from '@/contexts/UserContext';
 import { format } from 'date-fns';
 import { zhTW } from 'date-fns/locale';

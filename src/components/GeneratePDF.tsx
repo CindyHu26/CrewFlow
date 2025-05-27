@@ -129,7 +129,7 @@ export default function GeneratePDF({ service }: Props) {
               <td style={{ ...cellStyle, padding: '4px 8px' }}>
                 <HighlightedValue value={service.customer_names.join('、')} />
               </td>
-              <td style={{ ...cellStyle, padding: '4px 8px' }}>服務日期</td>
+              <td style={{ ...cellStyle, padding: '4px 8px' }}>服務時間</td>
               <td style={{ ...cellStyle, padding: '4px 8px' }}>
                 <HighlightedValue value={format(service.timestamp.toDate(), 'yyyy/MM/dd HH:mm')} />
               </td>
@@ -203,7 +203,7 @@ export default function GeneratePDF({ service }: Props) {
               {service.expenses && service.expenses.length > 0 && (
                 <>
                   <HighlightedValue value={service.expenses.map((expense, index) => (
-                    `${expense.category} ${expense.amount}元 ${expense.description}`
+                    `${expense.category} ${expense.amount}元 ${expense.item}`
                   )).join('、')} />
                 </>
               )}

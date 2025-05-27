@@ -4,59 +4,69 @@ import { Timestamp } from 'firebase/firestore';
 export interface Service {
   id: string;
   timestamp: Timestamp;
-  customer_names: string[];
-  staff_name: string;
-  worker_name: string;
-  job_types: string[];
   handling_process: string;
   handling_result: string;
+  customer_id: string;
+  signature: string;
+  service_feedback_employer: string;
+  service_feedback_worker: string;
   expenses: Expense[];
   sub_items: SubItem[];
   reports: Report[];
-  partner_names: string[];
+  photos: string[];
+  partners: string[];
   nationalities: string[];
-  service_feedback_employer: string;
-  service_feedback_worker: string;
-  total_amount: number;
-  worker_signature: string;
-  employer_signature: string;
-  service_signature: string;
-  photo_urls: string[];
-  shared_info: string;
+  job_types: string[];
   created_at: Timestamp;
   updated_at: Timestamp;
   status: 'draft' | 'submitted' | 'approved' | 'rejected';
+  customer_names: string[];
+  staff_name: string;
+  partner_names: string[];
+  photo_urls: string[];
+  worker_name: string;
+  employer_signature: string;
+  worker_signature: string;
+  service_signature: string;
+  shared_info: string;
+  total_amount: number;
 }
 
 // 表單資料型別定義
 export interface ServiceFormData {
-  staff_name: string;
-  partner_names: string[];
+  service_date: string;
   timestamp: Timestamp;
-  customer_names: string[];
-  nationalities: string[];
-  job_types: string[];
-  worker_name: string;
-  service_feedback_employer: string;
-  service_feedback_worker: string;
   handling_process: string;
   handling_result: string;
-  total_amount: number;
-  worker_signature: string;
-  employer_signature: string;
-  service_signature: string;
-  photo_urls: string[];
-  shared_info: string;
-  sub_items: SubItem[];
+  customer_id: string;
+  signature: string;
+  service_feedback_employer: string;
+  service_feedback_worker: string;
   expenses: Expense[];
+  sub_items: SubItem[];
   reports: Report[];
+  photos: string[];
+  created_at: Timestamp;
+  updated_at: Timestamp;
+  status: 'draft' | 'submitted' | 'approved' | 'rejected';
+  customer_names: string[];
+  staff_name: string;
+  partner_names: string[];
+  photo_urls: string[];
+  worker_name: string;
+  employer_signature: string;
+  worker_signature: string;
+  service_signature: string;
+  shared_info: string;
+  total_amount: number;
+  nationalities: string[];
+  job_types: string[];
 }
 
 // 收取/交付物件型別定義
 export interface SubItem {
-  id?: string;
   service_id: string;
-  category: '收取' | '交付';
+  category: string;
   item_name: string;
   quantity: number;
   note: string;
@@ -66,25 +76,22 @@ export interface SubItem {
 
 // 收支明細型別定義
 export interface Expense {
-  id?: string;
   service_id: string;
-  category: '收入' | '支出';
-  description: string;
+  category: string;
+  item: string;
   amount: number;
+  remark: string;
   created_at: Timestamp;
   updated_at: Timestamp;
 }
 
 // 回報事項型別定義
 export interface Report {
-  id?: string;
   service_id: string;
-  type: '客戶反映' | '移工反映' | '其他';
-  body: string;
+  type: string;
+  content: string;
   is_urgent: boolean;
-  status: '待處理' | '處理中' | '已完成';
-  handling_note?: string;
-  handler?: string;
+  status: string;
   created_at: Timestamp;
   updated_at: Timestamp;
 }
@@ -132,6 +139,6 @@ export interface ServiceRecord {
 
 // 簽名資料型別
 export interface SignatureData {
-  strokes: any[];      // 簽名筆劃資料
-  dataUrl: string;     // Base64 圖片資料
+  dataUrl: string;
+  strokes: any[];
 } 

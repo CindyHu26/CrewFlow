@@ -89,8 +89,7 @@ export default function ReportsList() {
       const statusMatches = !selectedStatus || report.status === selectedStatus;
       const searchMatches = !searchText || 
         report.customer_names.some(name => name.toLowerCase().includes(searchText.toLowerCase())) ||
-        report.body.toLowerCase().includes(searchText.toLowerCase()) ||
-        (report.handling_note || '').toLowerCase().includes(searchText.toLowerCase());
+        report.content.toLowerCase().includes(searchText.toLowerCase());
 
       console.log('Filter results:', {
         dateMatches,
@@ -243,14 +242,8 @@ export default function ReportsList() {
               </div>
               <div className="bg-gray-50 p-3 rounded mb-2">
                 <div className="text-sm font-medium text-gray-700 mb-1">回報內容：</div>
-                <div className="text-gray-600 whitespace-pre-wrap">{report.body}</div>
+                <div className="text-gray-600 whitespace-pre-wrap">{report.content}</div>
               </div>
-              {report.handling_note && (
-                <div className="bg-yellow-50 p-3 rounded">
-                  <div className="text-sm font-medium text-gray-700 mb-1">處理備註：</div>
-                  <div className="text-gray-600">{report.handling_note}</div>
-                </div>
-              )}
             </div>
           ))}
         </div>

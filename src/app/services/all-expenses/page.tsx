@@ -262,7 +262,7 @@ export default function AllExpensesList() {
                     ${expense.amount}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500">
-                    {expense.description}
+                    {expense.item}
                   </td>
                 </tr>
               ))}

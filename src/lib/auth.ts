@@ -69,7 +69,13 @@ export function getCurrentUser(): User | null {
         try {
           console.log('Found saved user in localStorage');
           const parsedUser = JSON.parse(savedUser);
-          currentUser = parsedUser as User;
+          // 確保返回的 User 物件包含所有必要欄位
+          currentUser = {
+            ...parsedUser,
+            is_active: parsedUser.is_active ?? true,
+            created_at: parsedUser.created_at ?? Timestamp.now(),
+            updated_at: parsedUser.updated_at ?? Timestamp.now()
+          } as User;
           console.log('Successfully parsed user:', currentUser);
         } catch (error) {
           console.error('Error parsing user data:', error);

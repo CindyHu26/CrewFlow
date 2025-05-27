@@ -2,7 +2,7 @@
 
 import { initializeApp } from "firebase/app";
 import { getFirestore, initializeFirestore, enableIndexedDbPersistence, Firestore } from 'firebase/firestore';
-import { getStorage } from 'firebase/storage';
+import { getStorage, FirebaseStorage } from 'firebase/storage';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
@@ -44,8 +44,8 @@ let db: Firestore;
 try {
   console.log('正在初始化 Firestore...');
   db = initializeFirestore(app, {
-  experimentalForceLongPolling: false, // 使用 WebSocket 連接
-    experimentalAutoDetectLongPolling: true // 自動檢測最佳連接方式
+    experimentalForceLongPolling: false,
+    experimentalAutoDetectLongPolling: true
   }) as Firestore;
   console.log('Firestore 初始化成功');
 } catch (error) {
@@ -53,7 +53,8 @@ try {
   throw error;
 }
 
-let storage;
+// Initialize Storage
+let storage: FirebaseStorage;
 try {
   console.log('正在初始化 Storage...');
   storage = getStorage(app);
