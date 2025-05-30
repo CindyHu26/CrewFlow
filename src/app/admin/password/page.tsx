@@ -44,7 +44,7 @@ export default function PasswordPage() {
       }
 
       // 檢查是否為密碼管理員
-      if (currentUser.employee_id !== 'P001' || currentUser.name !== 'everrich_password_manager') {
+      if (currentUser.employee_id !== 'P001' || currentUser.name !== 'admin') {
         router.push('/');
         return;
       }

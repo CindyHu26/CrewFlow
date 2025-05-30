@@ -7,6 +7,7 @@ import { customerDB } from '@/lib/customerDB';
 import { CustomerBase, NewCustomer } from '@/types';
 import { Timestamp } from 'firebase/firestore';
 import { useUsers } from '@/contexts/UserContext';
+import Card from '@/components/Card';
 
 export default function NewCustomerPage() {
   const router = useRouter();
@@ -99,7 +100,7 @@ export default function NewCustomerPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white shadow sm:rounded-lg">
+        <Card>
           <div className="px-4 py-5 sm:p-6">
             <h1 className="text-2xl font-bold mb-8">新增客戶</h1>
             
@@ -336,7 +337,7 @@ export default function NewCustomerPage() {
               </div>
             </form>
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );

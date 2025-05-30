@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { Timestamp } from 'firebase/firestore';
 import { calculateAnnualLeave } from '@/lib/leaveUtils';
 import { userDB } from '@/lib/employeeDB';
+import Card from '@/components/Card';
 
 interface Leave {
   id: string;
@@ -231,27 +232,27 @@ export default function LeavesPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <Card>
         <div className="text-center">
           <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-indigo-600 border-r-transparent"></div>
           <p className="mt-2 text-sm text-gray-600">載入中...</p>
         </div>
-      </div>
+      </Card>
     );
   }
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <Card>
         <div className="bg-red-50 p-4 rounded-md">
           <p className="text-red-700">{error}</p>
         </div>
-      </div>
+      </Card>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <Card>
       <div className="mb-8">
         <div className="flex justify-between items-start">
         <div>
@@ -370,6 +371,6 @@ export default function LeavesPage() {
           </tbody>
         </table>
       </div>
-    </div>
+    </Card>
   );
 } 

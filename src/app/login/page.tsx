@@ -7,6 +7,8 @@ import { collection, setDoc, doc, query, where, getDocs, addDoc } from 'firebase
 import { db } from '@/lib/firebase';
 import { hashPassword } from '@/lib/auth';
 import { Timestamp } from 'firebase/firestore';
+import Card from '@/components/Card';
+import Button from '@/components/Button';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -119,14 +121,14 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow">
-        <div>
-          <h2 className="text-center text-3xl font-extrabold text-gray-900">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+      <Card className="w-full max-w-md bg-white/80 dark:bg-gray-800/50">
+        <div className="mb-8">
+          <h2 className="text-center text-3xl font-extrabold text-gray-900 dark:text-white">
             CrewFlow {isRegistering ? '註冊' : '登入'}
           </h2>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
               <label htmlFor="username" className="sr-only">
@@ -137,7 +139,7 @@ export default function LoginPage() {
                 name="username"
                 type="text"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-700 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="帳號"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
@@ -153,7 +155,7 @@ export default function LoginPage() {
                   name="employee_id"
                   type="text"
                   required
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="員工編號"
                   value={employeeId}
                   onChange={(e) => setEmployeeId(e.target.value)}
@@ -169,7 +171,7 @@ export default function LoginPage() {
                 name="password"
                 type="password"
                 required
-                className={`appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 ${
+                className={`appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-700 ${
                   !isRegistering ? 'rounded-b-md' : ''
                 } focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
                 placeholder="密碼"
@@ -187,7 +189,7 @@ export default function LoginPage() {
                   name="confirmPassword"
                   type="password"
                   required
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-700 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="確認密碼"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
@@ -197,26 +199,24 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <div className="bg-red-50 p-4 rounded-md">
-              <p className="text-red-700">{error}</p>
+            <div className="bg-red-50 dark:bg-red-900/30 p-4 rounded-md">
+              <p className="text-red-700 dark:text-red-300">{error}</p>
             </div>
           )}
 
           <div className="flex flex-col space-y-4">
-            <button
+            <Button
               type="submit"
+              variant="primary"
               disabled={isLoading}
-              className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${
-                isLoading
-                  ? 'bg-indigo-400 cursor-not-allowed'
-                  : 'bg-indigo-600 hover:bg-indigo-700'
-              } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
+              className="w-full"
             >
               {isLoading ? (isRegistering ? '註冊中...' : '登入中...') : (isRegistering ? '註冊' : '登入')}
-            </button>
+            </Button>
             
-            <button
+            <Button
               type="button"
+              variant="secondary"
               onClick={() => {
                 setIsRegistering(!isRegistering);
                 setError('');
@@ -224,13 +224,13 @@ export default function LoginPage() {
                 setConfirmPassword('');
                 setEmployeeId('');
               }}
-              className="text-sm text-indigo-600 hover:text-indigo-500"
+              className="w-full"
             >
               {isRegistering ? '已有帳號？返回登入' : '還沒有帳號？立即註冊'}
-            </button>
+            </Button>
           </div>
         </form>
-      </div>
+      </Card>
     </div>
   );
 }

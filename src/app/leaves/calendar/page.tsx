@@ -11,6 +11,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { format } from 'date-fns';
 import { User } from '@/types';
+import Card from '@/components/Card';
 
 type CalendarEvent = {
   id: string;
@@ -191,19 +192,17 @@ export default function LeaveCalendarPage() {
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto p-4">
+      <Card className="max-w-7xl mx-auto p-4">
         <div className="text-center py-12">
           <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-indigo-600 border-r-transparent"></div>
           <p className="mt-2 text-gray-500">載入中...</p>
         </div>
-      </div>
+      </Card>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6">請假日曆</h1>
-      <div className="bg-white shadow rounded-lg p-4">
+    <Card className="max-w-7xl mx-auto p-4">
         <FullCalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           initialView="dayGridMonth"
@@ -243,7 +242,6 @@ export default function LeaveCalendarPage() {
             endTime: '17:00',
           }}
         />
-      </div>
-    </div>
+    </Card>
   );
 } 

@@ -9,6 +9,7 @@ import { format } from 'date-fns';
 import { User } from '@/types';
 import { calculateWorkingHours } from '@/lib/leaveUtils';
 import Select from 'react-select';
+import Card from '@/components/Card';
 
 interface LeaveFormData {
   userId: string;
@@ -108,7 +109,7 @@ export default function NewLeavePage() {
           const querySnapshot = await getDocs(usersRef);
           const deputies = querySnapshot.docs
             .map(doc => ({ id: doc.id, ...doc.data() } as User))
-            .filter(u => u.id !== user.id && u.id !== 'everrichadmin');  // 排除自己和 everrichadmin
+            .filter(u => u.id !== user.id && u.id !== 'admin');  // 排除自己和 admin
           setAvailableDeputies(deputies);
 
           // 查詢同部門的主管
@@ -236,8 +237,7 @@ export default function NewLeavePage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-3xl mx-auto">
+    <Card className="max-w-3xl mx-auto my-8">
         <h1 className="text-2xl font-bold text-gray-900 mb-8">新增請假申請</h1>
       {error && (
           <div className="mb-4 p-4 bg-red-50 rounded-md">
@@ -386,7 +386,6 @@ export default function NewLeavePage() {
           </button>
         </div>
       </form>
-      </div>
-    </div>
+    </Card>
   );
 } 

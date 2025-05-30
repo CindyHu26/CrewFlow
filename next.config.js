@@ -48,6 +48,14 @@ const nextConfig = {
       };
     }
 
+    // 解決模組載入問題
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      net: false,
+      tls: false,
+    };
+
     return config;
   },
   // 啟用 React 的 Fast Refresh

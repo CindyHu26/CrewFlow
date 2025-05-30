@@ -6,6 +6,7 @@ import { getCurrentUser } from '@/lib/auth';
 import { customerDB } from '@/lib/customerDB';
 import { Customer } from '@/types';
 import { useUsers } from '@/contexts/UserContext';
+import Card from '@/components/Card';
 
 export default function CustomersList() {
   const router = useRouter();
@@ -129,7 +130,7 @@ export default function CustomersList() {
         </div>
 
         {/* 搜尋區塊 */}
-        <div className="bg-white p-6 rounded-lg shadow mb-6">
+        <Card className="mb-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label htmlFor="search" className="block text-xl font-semibold text-gray-700">
@@ -161,10 +162,10 @@ export default function CustomersList() {
               </select>
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* 客戶列表 */}
-        <div className="bg-white shadow rounded-lg">
+        <Card>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
@@ -226,7 +227,7 @@ export default function CustomersList() {
               </tbody>
             </table>
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );

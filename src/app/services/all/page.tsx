@@ -9,6 +9,12 @@ import { Timestamp } from 'firebase/firestore';
 import { format, parse, isValid } from 'date-fns';
 import Link from 'next/link';
 import { Tab } from '@headlessui/react';
+import Card from '@/components/Card';
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import { createContext, useContext } from 'react';
 
 interface Service {
   id: string;
@@ -49,6 +55,13 @@ interface Report {
   created_at: Timestamp;
   updated_at: Timestamp;
 }
+
+const DarkModeContext = createContext({
+  isDark: false,
+  toggle: () => {}
+});
+
+export const useDarkMode = () => useContext(DarkModeContext);
 
 export default function AllServicesPage() {
   const router = useRouter();
@@ -260,6 +273,8 @@ export default function AllServicesPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <Card className="hover:bg-gray-50 dark:hover:bg-gray-700/10 transition-colors">
+          <Tab.Group>
         <div className="mb-6">
           <h1 className="text-2xl font-bold">服務紀錄管理</h1>
         </div>
@@ -283,7 +298,7 @@ export default function AllServicesPage() {
         {/* Tab 內容 */}
         {activeTab === 'services' && (
           <>
-        <div className="bg-white p-4 rounded-lg shadow mb-6">
+            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -291,7 +306,7 @@ export default function AllServicesPage() {
               </label>
               <input
                 type="date"
-                className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                 value={filters.dateRange.start}
                 onChange={(e) => handleFilterChange('dateRange', { start: e.target.value })}
               />
@@ -302,7 +317,7 @@ export default function AllServicesPage() {
               </label>
               <input
                 type="date"
-                className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                 value={filters.dateRange.end}
                 onChange={(e) => handleFilterChange('dateRange', { end: e.target.value })}
               />
@@ -313,7 +328,7 @@ export default function AllServicesPage() {
               </label>
               <input
                 type="text"
-                className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                 value={filters.customerName}
                 onChange={(e) => handleFilterChange('customerName', e.target.value)}
                 placeholder="搜尋客戶名稱"
@@ -325,7 +340,7 @@ export default function AllServicesPage() {
               </label>
               <input
                 type="text"
-                className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                 value={filters.staffName}
                 onChange={(e) => handleFilterChange('staffName', e.target.value)}
                 placeholder="搜尋服務人員"
@@ -387,8 +402,8 @@ export default function AllServicesPage() {
                 </tr>
               ) : (
                 filteredServices.map((service: Service) => (
-                  <tr key={service.id} className="hover:bg-gray-50">
-                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                      <tr key={service.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/10 even:bg-gray-50/50 dark:even:bg-gray-800/50">
+                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 dark:text-white sm:pl-6">
                       {service.staff_name}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
@@ -466,11 +481,11 @@ export default function AllServicesPage() {
                     <div className="text-gray-700 whitespace-pre-wrap">{report.body}</div>
                     <div className="mt-2 text-sm">
                       <span className="text-gray-600">狀態：</span>
-                      <span className={
-                        report.status === '已完成' ? 'text-green-600' :
-                        report.status === '處理中' ? 'text-yellow-600' :
-                        'text-red-600'
-                      }>
+                          <span className={`px-2 py-1 text-xs rounded-full ${
+                            report.status === '已完成' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 
+                            report.status === '處理中' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300' : 
+                            'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
+                          }`}>
                         {report.status}
                       </span>
                     </div>
@@ -484,6 +499,8 @@ export default function AllServicesPage() {
             )}
           </div>
         )}
+          </Tab.Group>
+        </Card>
       </div>
     </div>
   );

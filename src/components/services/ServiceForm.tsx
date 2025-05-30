@@ -3,7 +3,7 @@ import { SignatureField } from '@/components/SignaturePad';
 import { ServiceFormData, SubItem, Expense, Report, Service } from '@/types/service';
 import { Timestamp } from 'firebase/firestore';
 import { Combobox } from '@headlessui/react';
-import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
+import { MagnifyingGlassIcon, CheckIcon } from '@heroicons/react/20/solid';
 import { format } from 'date-fns';
 
 const NATIONALITIES = ['印尼', '越南', '泰國', '菲律賓'] as const;
@@ -153,15 +153,15 @@ function MultiSelectCombobox({
       <Combobox as="div" value="" onChange={onChange}>
         <div className="relative">
           <Combobox.Input
-            className="w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            className="w-full rounded-md border-0 bg-background py-1.5 pl-3 pr-10 text-foreground shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 sm:text-sm sm:leading-6"
             onChange={(event) => setQuery(event.target.value)}
             placeholder={placeholder}
           />
           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
-            <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+            <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 dark:text-gray-500" aria-hidden="true" />
           </Combobox.Button>
         </div>
-        <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+        <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-background py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
           {filteredOptions.length === 0 && query !== '' ? (
             <div className="relative cursor-default select-none py-2 px-4 text-gray-700">找不到符合的選項</div>
           ) : (
@@ -169,19 +169,27 @@ function MultiSelectCombobox({
               <Combobox.Option
                 key={option.id}
                 value={option.id}
-                className={({ active }) => `relative cursor-default select-none py-2 pl-3 pr-9 ${active ? 'bg-indigo-600 text-white' : 'text-gray-900'}`}
+                className={({ active }) =>
+                  `relative cursor-default select-none py-2 pl-3 pr-9 ${
+                    active ? 'bg-indigo-600 text-white' : 'text-foreground'
+                  }`
+                }
               >
-                {({ active }) => (
-                  <div className="flex items-center">
-                    <input type="checkbox" checked={selected.includes(option.id)} className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600" onChange={() => {}} />
-                    <span className="ml-3 truncate">{displayValue ? displayValue(option) : option.name}</span>
-                    {showCategory && option.category && (
-                      <span className={`ml-2 truncate text-sm ${active ? 'text-indigo-200' : 'text-gray-500'}`}>（{option.category}）</span>
+                {({ selected, active }) => (
+                  <>
+                    <span className={`block truncate ${selected ? 'font-semibold' : 'font-normal'}`}>
+                      {displayValue ? displayValue(option) : option.name}
+                    </span>
+                    {selected && (
+                      <span
+                        className={`absolute inset-y-0 right-0 flex items-center pr-4 ${
+                          active ? 'text-white' : 'text-indigo-600'
+                        }`}
+                      >
+                        <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                      </span>
                     )}
-                    {option.departments && (
-                      <span className={`ml-2 truncate text-sm ${active ? 'text-indigo-200' : 'text-gray-500'}`}>（{option.departments.join('/')}）</span>
-                    )}
-                  </div>
+                  </>
                 )}
               </Combobox.Option>
             ))

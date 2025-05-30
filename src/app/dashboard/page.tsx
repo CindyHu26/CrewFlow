@@ -9,6 +9,8 @@ import { userDB } from '@/lib/employeeDB';
 import { Timestamp } from 'firebase/firestore';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import Card from '@/components/Card';
+import Button from '@/components/Button';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -35,7 +37,7 @@ export default function DashboardPage() {
         }
 
         setUser(freshUserData);
-        setIsAdmin(currentUser.id === 'everrichadmin');
+        setIsAdmin(currentUser.id === 'admin');
 
         // 獲取需要審核的請假申請數量
         const leavesQuery = query(
@@ -64,16 +66,16 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-2xl text-gray-600">載入中...</div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+        <div className="text-2xl text-gray-600 dark:text-gray-400">載入中...</div>
       </div>
     );
   }
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-2xl text-red-600">無法載入使用者資料</div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+        <div className="text-2xl text-red-600 dark:text-red-400">無法載入使用者資料</div>
       </div>
     );
   }
@@ -112,84 +114,90 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="bg-white rounded-lg shadow p-6 mb-8">
+        <Card className="mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between">
             <div>
-              <h1 className="text-3xl font-bold mb-2">歡迎回來，{user.name}</h1>
-              <p className="text-lg text-gray-600">年資：{yearsOfService}</p>
+              <h1 className="text-3xl font-bold mb-2 text-gray-900 dark:text-white">歡迎回來，{user.name}</h1>
+              <p className="text-lg text-gray-600 dark:text-gray-400">年資：{yearsOfService}</p>
             </div>
           </div>
-        </div>
+        </Card>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div className="bg-white rounded-lg shadow p-4">
-            <h2 className="text-xl font-semibold mb-4">快速連結</h2>
+          <Card>
+            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">快速連結</h2>
             <div className="space-y-2">
               {isAdmin ? (
                 <>
-                  <button 
+                  <Button
+                    variant="secondary"
                     onClick={() => router.push('/admin/password')}
-                    className="w-full text-left px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+                    className="w-full justify-start"
                   >
                     密碼管理
-                  </button>
-                  <button 
+                  </Button>
+                  <Button
+                    variant="secondary"
                     onClick={() => router.push('/profile')}
-                    className="w-full text-left px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+                    className="w-full justify-start"
                   >
                     個人資料設定
-                  </button>
+                  </Button>
                 </>
               ) : (
                 <>
-                  <button 
+                  <Button
+                    variant="secondary"
                     onClick={() => router.push('/services/new')}
-                    className="w-full text-left px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+                    className="w-full justify-start"
                   >
                     建立服務紀錄
-                  </button>
-                  <button 
+                  </Button>
+                  <Button
+                    variant="secondary"
                     onClick={() => router.push('/leaves/new')}
-                    className="w-full text-left px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+                    className="w-full justify-start"
                   >
                     申請請假
-                  </button>
-                  <button 
+                  </Button>
+                  <Button
+                    variant="secondary"
                     onClick={() => router.push('/profile')}
-                    className="w-full text-left px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+                    className="w-full justify-start"
                   >
                     個人資料設定
-                  </button>
+                  </Button>
                 </>
               )}
             </div>
-          </div>
+          </Card>
 
-          <div className="bg-white rounded-lg shadow p-4">
-            <h2 className="text-xl font-semibold mb-4">待處理事項</h2>
+          <Card>
+            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">待處理事項</h2>
             <div className="space-y-2">
               {pendingLeavesCount > 0 ? (
-                <button
-                  className="flex items-center justify-between w-full px-2 py-2 rounded hover:bg-blue-50 transition-colors cursor-pointer"
+                <Button
+                  variant="secondary"
                   onClick={() => router.push('/leaves/review')}
+                  className="w-full justify-between"
                 >
-                  <span className="text-gray-600">抄送給我的請假審核</span>
-                  <span className="text-blue-600 font-medium">{pendingLeavesCount} 筆</span>
-                </button>
+                  <span>抄送給我的請假審核</span>
+                  <span className="text-blue-600 dark:text-blue-400 font-medium">{pendingLeavesCount} 筆</span>
+                </Button>
               ) : (
-                <p className="text-gray-500">尚無待處理事項</p>
+                <p className="text-gray-500 dark:text-gray-400">尚無待處理事項</p>
               )}
             </div>
-          </div>
+          </Card>
 
-          <div className="bg-white rounded-lg shadow p-4">
-            <h2 className="text-xl font-semibold mb-4">系統公告</h2>
-            <div className="text-gray-500">
+          <Card>
+            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">系統公告</h2>
+            <div className="text-gray-500 dark:text-gray-400">
               <p>歡迎使用 CrewFlow 內部管理系統</p>
             </div>
-          </div>
+          </Card>
         </div>
       </div>
     </div>

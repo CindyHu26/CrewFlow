@@ -102,14 +102,14 @@ export default function LeaveDetailPage({ params }: { params: { id: string } }) 
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-background py-8">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white shadow rounded-lg overflow-hidden">
+        <div className="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
           <div className="px-4 py-5 sm:px-6">
             <div className="flex justify-between items-start">
               <div>
-                <h1 className="text-3xl font-bold">請假詳情</h1>
-                <p className="mt-1 max-w-2xl text-lg text-gray-500">
+                <h1 className="text-3xl font-bold text-foreground">請假詳情</h1>
+                <p className="mt-1 max-w-2xl text-lg text-gray-500 dark:text-gray-400">
                   請假申請的詳細資訊
                 </p>
               </div>
@@ -118,21 +118,21 @@ export default function LeaveDetailPage({ params }: { params: { id: string } }) 
               </span>
             </div>
           </div>
-          <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
+          <div className="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:px-6">
             <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
               <div className="sm:col-span-1">
-                <dt className="text-sm font-medium text-gray-500">申請人</dt>
-                <dd className="mt-1 text-sm text-gray-900">
+                <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">申請人</dt>
+                <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100">
                   {(leave as any).username}
                 </dd>
               </div>
               <div className="sm:col-span-1">
-                <dt className="text-sm font-medium text-gray-500">請假類型</dt>
-                <dd className="mt-1 text-sm text-gray-900">{leave.type}</dd>
+                <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">請假類型</dt>
+                <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100">{leave.type}</dd>
               </div>
               <div className="sm:col-span-1">
-                <dt className="text-sm font-medium text-gray-500">開始時間</dt>
-                <dd className="mt-1 text-sm text-gray-900">
+                <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">開始時間</dt>
+                <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100">
                   {(leave.startDateTime instanceof Timestamp ? 
                       leave.startDateTime.toDate() : 
                     new Date(leave.startDateTime)
@@ -148,8 +148,8 @@ export default function LeaveDetailPage({ params }: { params: { id: string } }) 
                 </dd>
               </div>
               <div className="sm:col-span-1">
-                <dt className="text-sm font-medium text-gray-500">結束時間</dt>
-                <dd className="mt-1 text-sm text-gray-900">
+                <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">結束時間</dt>
+                <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100">
                   {(leave.endDateTime instanceof Timestamp ? 
                       leave.endDateTime.toDate() : 
                     new Date(leave.endDateTime)
@@ -165,20 +165,20 @@ export default function LeaveDetailPage({ params }: { params: { id: string } }) 
                 </dd>
               </div>
               <div className="sm:col-span-1">
-                <dt className="text-sm font-medium text-gray-500">請假時數</dt>
-                <dd className="mt-1 text-sm text-gray-900">{leave.totalHours} 小時</dd>
+                <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">請假時數</dt>
+                <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100">{leave.totalHours} 小時</dd>
               </div>
               <div className="sm:col-span-1">
-                <dt className="text-sm font-medium text-gray-500">請假天數</dt>
-                <dd className="mt-1 text-sm text-gray-900">{Math.round((leave.totalHours / 8) * 100) / 100} 天</dd>
+                <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">請假天數</dt>
+                <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100">{Math.round((leave.totalHours / 8) * 100) / 100} 天</dd>
               </div>
               <div className="sm:col-span-2">
-                <dt className="text-sm font-medium text-gray-500">請假原因</dt>
-                <dd className="mt-1 text-sm text-gray-900">{leave.reason}</dd>
+                <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">請假原因</dt>
+                <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100">{leave.reason}</dd>
               </div>
               <div className="sm:col-span-2">
-                <dt className="text-sm font-medium text-gray-500">代理人及職務相關人員</dt>
-                <dd className="mt-1 text-sm text-gray-900">
+                <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">代理人及職務相關人員</dt>
+                <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100">
                   {leave.deputies?.map(deputyId => {
                     const deputy = getUserById(deputyId);
                     return deputy ? deputy.name : deputyId;
@@ -186,8 +186,8 @@ export default function LeaveDetailPage({ params }: { params: { id: string } }) 
                 </dd>
               </div>
               <div className="sm:col-span-2">
-                <dt className="text-sm font-medium text-gray-500">審核流程</dt>
-                <dd className="mt-1 text-sm text-gray-900">
+                <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">審核流程</dt>
+                <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100">
                   <ul className="space-y-2">
                     {leave.approvalFlow?.deputies?.map((deputy, index) => (
                       <li key={deputy.id} className="flex items-center space-x-2">
@@ -281,10 +281,10 @@ export default function LeaveDetailPage({ params }: { params: { id: string } }) 
               </div>
             </dl>
           </div>
-          <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
+          <div className="px-4 py-3 bg-gray-50 dark:bg-gray-700/50 text-right sm:px-6">
             <button
               onClick={() => router.back()}
-              className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-600"
             >
               返回
             </button>

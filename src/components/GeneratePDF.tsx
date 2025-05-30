@@ -108,15 +108,7 @@ export default function GeneratePDF({ service }: Props) {
           opacity: 0.8,
           zIndex: 100
         }}>
-          <img 
-            src="/evergreen_zhtw.png" 
-            alt="浮水印"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'contain'
-            }}
-          />
+          {/* 移除圖片 */}
         </div>
 
         <h1 style={{ textAlign: 'center', fontSize: '18pt', marginBottom: '0.2rem' }}>長青國際集團</h1>

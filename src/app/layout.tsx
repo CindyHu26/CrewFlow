@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 import { UserProvider } from '@/contexts/UserContext';
+import { ThemeProvider } from './Providers';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,16 +35,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="zh-TW">
-      <head>
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="mobile-web-app-capable" content="yes" />
-      </head>
+    <html lang="zh-TW" suppressHydrationWarning>
       <body className={inter.className}>
-        <UserProvider>
-        <Navigation />
-        <main className="min-h-screen bg-gray-50">{children}</main>
-        </UserProvider>
+        <ThemeProvider>
+          <UserProvider>
+            <Navigation />
+            <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
+              <div className="container py-4 sm:py-6">
+                {children}
+              </div>
+            </main>
+          </UserProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

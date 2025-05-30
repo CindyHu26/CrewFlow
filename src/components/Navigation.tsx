@@ -56,7 +56,7 @@ export default function Navigation() {
   useEffect(() => {
     const currentUser = getCurrentUser();
     setUser(currentUser);
-    setIsAdmin(currentUser?.id === 'everrichadmin');
+    setIsAdmin(currentUser?.id === 'admin');
     // 檢查是否為經理級以上（position_level >= 3）
     setIsManagerOrAbove(
       (currentUser?.position_level ?? 0) >= 3
@@ -76,7 +76,7 @@ export default function Navigation() {
   };
 
   return (
-    <Disclosure as="nav" className="bg-white shadow">
+    <Disclosure as="nav" className="bg-white dark:bg-gray-800 shadow dark:shadow-gray-700/50">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -85,10 +85,9 @@ export default function Navigation() {
                 <div className="flex items-center space-x-2">
                   <img
                     className="h-8 w-auto"
-                    src="/evergreen_zhtw.png"
                     alt="CrewFlow"
                   />
-                  <span className="text-lg font-semibold text-gray-800">CrewFlow</span>
+                  <span className="text-lg font-semibold text-gray-800 dark:text-white">CrewFlow</span>
                 </div>
                 <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-8">
                   {navigation.map((item) => (
@@ -100,9 +99,9 @@ export default function Navigation() {
                             className={classNames(
                               'inline-flex items-center border-b-2',
                               pathname.startsWith(item.href)
-                                ? 'border-indigo-500 text-gray-900'
-                                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
-                              'px-1 py-2 text-sm font-medium cursor-pointer'
+                                ? 'border-indigo-500 text-gray-900 dark:text-white'
+                                : 'border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-white',
+                              'px-1 py-2 text-sm font-medium cursor-pointer transition-colors'
                             )}
                           >
                             {item.name}
@@ -116,7 +115,7 @@ export default function Navigation() {
                             leaveFrom="transform opacity-100 scale-100"
                             leaveTo="transform opacity-0 scale-95"
                           >
-                            <Menu.Items className="absolute left-0 top-full z-50 mt-1 w-48 origin-top-left rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <Menu.Items className="absolute left-0 top-full z-50 mt-1 w-48 origin-top-left rounded-md bg-white dark:bg-gray-800 py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                               {item.children.map((child) => (
                                 (!child.requireManagerOrAbove || isManagerOrAbove) && (
                                   <Menu.Item key={child.name}>
@@ -124,8 +123,8 @@ export default function Navigation() {
                                       <Link
                                         href={child.href}
                                         className={classNames(
-                                          active ? 'bg-gray-100' : '',
-                                          'block px-4 py-2 text-sm text-gray-700'
+                                          active ? 'bg-gray-100 dark:bg-gray-700' : '',
+                                          'block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 transition-colors'
                                         )}
                                       >
                                         {child.name}
@@ -140,8 +139,8 @@ export default function Navigation() {
                                     <Link
                                       href="/services/all-expenses"
                                       className={classNames(
-                                        active ? 'bg-gray-100' : '',
-                                        'block px-4 py-2 text-sm text-gray-700'
+                                        active ? 'bg-gray-100 dark:bg-gray-700' : '',
+                                        'block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 transition-colors'
                                       )}
                                     >
                                       所有收支明細
@@ -158,9 +157,9 @@ export default function Navigation() {
                           className={classNames(
                             'inline-flex items-center border-b-2',
                             pathname === item.href
-                              ? 'border-indigo-500 text-gray-900'
-                              : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
-                            'px-1 py-2 text-sm font-medium'
+                              ? 'border-indigo-500 text-gray-900 dark:text-white'
+                              : 'border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-white',
+                            'px-1 py-2 text-sm font-medium transition-colors'
                           )}
                         >
                           {item.name}
@@ -175,9 +174,9 @@ export default function Navigation() {
                       className={classNames(
                         'inline-flex items-center border-b-2',
                         pathname === item.href
-                          ? 'border-indigo-500 text-gray-900'
-                          : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
-                        'px-1 py-2 text-sm font-medium'
+                          ? 'border-indigo-500 text-gray-900 dark:text-white'
+                          : 'border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:text-gray-700 dark:hover:text-white',
+                        'px-1 py-2 text-sm font-medium transition-colors'
                       )}
                     >
                       {item.name}
@@ -189,10 +188,10 @@ export default function Navigation() {
                 {user ? (
                   <Menu as="div" className="relative ml-3">
                     <div>
-                      <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                      <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:bg-gray-800">
                         <span className="sr-only">開啟使用者選單</span>
-                        <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
-                          <span className="text-gray-600">{user.name[0]}</span>
+                        <div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                          <span className="text-gray-600 dark:text-gray-200">{user.name[0]}</span>
                         </div>
                       </Menu.Button>
                     </div>
@@ -205,14 +204,14 @@ export default function Navigation() {
                       leaveFrom="transform opacity-100 scale-100"
                       leaveTo="transform opacity-0 scale-95"
                     >
-                      <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white dark:bg-gray-800 py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <Menu.Item>
                           {({ active }) => (
                             <Link
                               href="/profile"
                               className={classNames(
-                                active ? 'bg-gray-100' : '',
-                                'block px-4 py-2 text-sm text-gray-700'
+                                active ? 'bg-gray-100 dark:bg-gray-700' : '',
+                                'block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 transition-colors'
                               )}
                             >
                               個人資料設定
@@ -224,8 +223,8 @@ export default function Navigation() {
                             <button
                               onClick={handleLogout}
                               className={classNames(
-                                active ? 'bg-gray-100' : '',
-                                'block w-full text-left px-4 py-2 text-sm text-gray-700'
+                                active ? 'bg-gray-100 dark:bg-gray-700' : '',
+                                'block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 transition-colors'
                               )}
                             >
                               登出
@@ -238,14 +237,14 @@ export default function Navigation() {
                 ) : (
                   <Link
                     href="/login"
-                    className="text-gray-500 hover:text-gray-700"
+                    className="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white transition-colors"
                   >
                     登入
                   </Link>
                 )}
               </div>
               <div className="-mr-2 flex items-center sm:hidden">
-                <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 dark:hover:bg-gray-700 dark:hover:text-white transition-colors">
                   <span className="sr-only">開啟主選單</span>
                   {open ? (
                     <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
@@ -265,7 +264,7 @@ export default function Navigation() {
                     <>
                       <Disclosure.Button
                         as="div"
-                        className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700"
+                        className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-white transition-colors"
                       >
                         {item.name}
                       </Disclosure.Button>
@@ -274,7 +273,7 @@ export default function Navigation() {
                           <Link
                             key={child.name}
                             href={child.href}
-                            className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700"
+                            className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-white transition-colors"
                           >
                             {child.name}
                           </Link>
@@ -287,8 +286,8 @@ export default function Navigation() {
                       className={classNames(
                         'block border-l-4 py-2 pl-3 pr-4 text-base font-medium',
                         pathname === item.href
-                          ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
-                          : 'border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700'
+                          ? 'border-indigo-500 bg-indigo-50 text-indigo-700 dark:bg-gray-700 dark:text-white'
+                          : 'border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-white transition-colors'
                       )}
                     >
                       {item.name}
@@ -303,25 +302,25 @@ export default function Navigation() {
                   className={classNames(
                     'block border-l-4 py-2 pl-3 pr-4 text-base font-medium',
                     pathname === item.href
-                      ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
-                      : 'border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700'
+                      ? 'border-indigo-500 bg-indigo-50 text-indigo-700 dark:bg-gray-700 dark:text-white'
+                      : 'border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-white transition-colors'
                   )}
                 >
                   {item.name}
                 </Link>
               ))}
             </div>
-            <div className="border-t border-gray-200 pb-3 pt-4">
+            <div className="border-t border-gray-200 pb-3 pt-4 dark:border-gray-700">
               {user ? (
                 <>
                   <div className="flex items-center px-4">
                     <div className="flex-shrink-0">
-                      <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
-                        <span className="text-gray-600">{user.name[0]}</span>
+                      <div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                        <span className="text-gray-600 dark:text-gray-200">{user.name[0]}</span>
                       </div>
                     </div>
                     <div className="ml-3">
-                      <div className="text-base font-medium text-gray-800">
+                      <div className="text-base font-medium text-gray-800 dark:text-white">
                         {user.name}
                       </div>
                     </div>
@@ -329,13 +328,13 @@ export default function Navigation() {
                   <div className="mt-3 space-y-1">
                     <Link
                       href="/profile"
-                      className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+                      className="block px-4 py-2 text-base font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-white transition-colors"
                     >
                       個人資料
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+                      className="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-white transition-colors"
                     >
                       登出
                     </button>
@@ -345,7 +344,7 @@ export default function Navigation() {
                 <div className="mt-3 space-y-1">
                   <Link
                     href="/login"
-                    className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+                    className="block px-4 py-2 text-base font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-white transition-colors"
                   >
                     登入
                   </Link>
