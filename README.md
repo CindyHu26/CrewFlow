@@ -1,24 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CrewFlow
 
-## Getting Started
+CrewFlow 是一個使用 Next.js 框架開發的現代化網頁應用程式。這個專案旨在提供一個高效能、可擴展且易於維護的解決方案。
 
-First, run the development server:
+## 技術棧
+
+- **前端框架**: [Next.js](https://nextjs.org) - React 框架
+- **開發語言**: TypeScript
+- **樣式解決方案**: Tailwind CSS
+- **狀態管理**: React Context API
+- **部署平台**: Vercel
+
+## 開始使用
+
+首先，安裝依賴套件：
+
+```bash
+npm install
+# 或
+yarn install
+# 或
+pnpm install
+```
+
+接著，啟動開發伺服器：
 
 ```bash
 npm run dev
-# or
+# 或
 yarn dev
-# or
+# 或
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+開啟 [http://localhost:3000](http://localhost:3000) 即可在瀏覽器中查看結果。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 專案結構
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+crewflow/
+├── app/                # 應用程式主要程式碼
+├── components/         # 可重用元件
+├── public/            # 靜態資源
+└── styles/            # 樣式檔案
+```
+
+## 開發指南
+
+- 使用 `app/page.tsx` 作為主要頁面入口
+- 所有元件都放置在 `components` 目錄下
+- 使用 TypeScript 確保程式碼品質
+- 遵循 Next.js 的最佳實踐
+
+## 部署
+
+本專案使用 Vercel 進行部署，提供最佳的 Next.js 應用程式託管體驗。
+
+## 貢獻指南
+
+歡迎提交 Pull Request 或開立 Issue 來協助改進這個專案。
+
+## 授權
+
+MIT License
 
 ## Learn More
 
