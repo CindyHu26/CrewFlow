@@ -59,10 +59,6 @@ crewflow/
 
 歡迎提交 Pull Request 或開立 Issue 來協助改進這個專案。
 
-## 授權
-
-MIT License
-
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
